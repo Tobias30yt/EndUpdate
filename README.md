@@ -135,7 +135,7 @@ Technische Referenzen: [Paper-Projektsetup](https://docs.papermc.io/paper/dev/pr
 
 ## Alle Tobias30 MidniteSMP plugins
 
-- Claims: _[Paper 1.5.3](https://github.com/Tobias30yt/Claims/releases/tag/paper-1.5.3)_
+- Claims: _[Paper 1.5.5](https://github.com/Tobias30yt/Claims/releases/tag/paper-1.5.5)_
 - Claims Client Mod: _[1.31.6](https://github.com/Tobias30yt/Claims-Client/releases/tag/v1.31.6)_
 - Reports: _[1.2.36](https://github.com/Tobias30yt/Reports/releases/tag/v1.2.36)_
 - EndUpdate: _[1.0.1](https://github.com/Tobias30yt/EndUpdate/releases/tag/v1.0.1)_
