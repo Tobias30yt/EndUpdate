@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+Test set: de.midnitesmp.endupdate.MithrylGiveCommandTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.101 s -- in de.midnitesmp.endupdate.MithrylGiveCommandTest
+-------------------------------------------------------------------------------
+Test set: de.midnitesmp.endupdate.MithrylRulesTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.048 s -- in de.midnitesmp.endupdate.MithrylRulesTest

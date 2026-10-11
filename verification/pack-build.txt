@@ -1,0 +1,2 @@
+Embedded pack matches source files. JAR SHA256: 17af0a2ff59e7525e27708b04b6a7014b73ed698bd6820d123e506e39e844dc7
+Pack references, PNGs, transparency and format 97.1 verified.

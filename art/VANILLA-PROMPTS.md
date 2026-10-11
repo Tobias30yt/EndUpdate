@@ -1,0 +1,76 @@
+# Vanilla-style Mithryl art
+
+Generated with built-in Imagegen using vanilla silhouettes and UV layouts as references. Final items and blocks: 16×16; equipment and trims: 64×32. Import uses nearest-neighbor resizing. Sources: `art/generated/vanilla/`.
+
+## sword
+
+PRECISE PALETTE SWAP ONLY. Attached PNG is an enlarged original vanilla Minecraft sword inventory sprite, exactly 16x16 source pixels enlarged to 1024x1024. Keep EVERY PIXEL'S POSITION and EXACT silhouette, empty regions and alignment. Change only opaque netherite METAL colors to restrained Mithryl: dark outline #33494d, dark #4c666b, mid #77989b, light #aec9c9, highlight #d7e5e2. Keep brown wooden handles in their existing brown palette. Keep flat opaque squares and transparent squares as in reference. Output same full square canvas and same 16x16 grid. No new details or decorations, no purple, no gems, no glow, no mist, no bloom, no gradients, no extra pixels, no antialiasing or shadow. Vanilla Minecraft texture palette edit, NOT an illustration.
+
+## pickaxe
+
+PRECISE PALETTE SWAP ONLY. Attached PNG is an enlarged original vanilla Minecraft pickaxe inventory sprite, exactly 16x16 source pixels enlarged to 1024x1024. Keep EVERY PIXEL'S POSITION and EXACT silhouette, empty regions and alignment. Change only opaque netherite METAL colors to restrained Mithryl: dark outline #33494d, dark #4c666b, mid #77989b, light #aec9c9, highlight #d7e5e2. Keep brown wooden handles in their existing brown palette. Keep flat opaque squares and transparent squares as in reference. Output same full square canvas and same 16x16 grid. No new details or decorations, no purple, no gems, no glow, no mist, no bloom, no gradients, no extra pixels, no antialiasing or shadow. Vanilla Minecraft texture palette edit, NOT an illustration.
+
+## axe
+
+PRECISE PALETTE SWAP ONLY. Attached PNG is an enlarged original vanilla Minecraft axe inventory sprite, exactly 16x16 source pixels enlarged to 1024x1024. Keep EVERY PIXEL'S POSITION and EXACT silhouette, empty regions and alignment. Change only opaque netherite METAL colors to restrained Mithryl: dark outline #33494d, dark #4c666b, mid #77989b, light #aec9c9, highlight #d7e5e2. Keep brown wooden handles in their existing brown palette. Keep flat opaque squares and transparent squares as in reference. Output same full square canvas and same 16x16 grid. No new details or decorations, no purple, no gems, no glow, no mist, no bloom, no gradients, no extra pixels, no antialiasing or shadow. Vanilla Minecraft texture palette edit, NOT an illustration.
+
+## shovel
+
+PRECISE PALETTE SWAP ONLY. Attached PNG is an enlarged original vanilla Minecraft shovel inventory sprite, exactly 16x16 source pixels enlarged to 1024x1024. Keep EVERY PIXEL'S POSITION and EXACT silhouette, empty regions and alignment. Change only opaque netherite METAL colors to restrained Mithryl: dark outline #33494d, dark #4c666b, mid #77989b, light #aec9c9, highlight #d7e5e2. Keep brown wooden handles in their existing brown palette. Keep flat opaque squares and transparent squares as in reference. Output same full square canvas and same 16x16 grid. No new details or decorations, no purple, no gems, no glow, no mist, no bloom, no gradients, no extra pixels, no antialiasing or shadow. Vanilla Minecraft texture palette edit, NOT an illustration.
+
+## hoe
+
+PRECISE PALETTE SWAP ONLY. Attached PNG is an enlarged original vanilla Minecraft hoe inventory sprite, exactly 16x16 source pixels enlarged to 1024x1024. Keep EVERY PIXEL'S POSITION and EXACT silhouette, empty regions and alignment. Change only opaque netherite METAL colors to restrained Mithryl: dark outline #33494d, dark #4c666b, mid #77989b, light #aec9c9, highlight #d7e5e2. Keep brown wooden handles in their existing brown palette. Keep flat opaque squares and transparent squares as in reference. Output same full square canvas and same 16x16 grid. No new details or decorations, no purple, no gems, no glow, no mist, no bloom, no gradients, no extra pixels, no antialiasing or shadow. Vanilla Minecraft texture palette edit, NOT an illustration.
+
+## helmet
+
+PRECISE PALETTE SWAP ONLY. Attached PNG is an enlarged original vanilla Minecraft helmet inventory sprite, exactly 16x16 source pixels enlarged to 1024x1024. Keep EVERY PIXEL'S POSITION and EXACT silhouette, empty regions and alignment. Change only opaque netherite METAL colors to restrained Mithryl: dark outline #33494d, dark #4c666b, mid #77989b, light #aec9c9, highlight #d7e5e2. Keep brown wooden handles in their existing brown palette. Keep flat opaque squares and transparent squares as in reference. Output same full square canvas and same 16x16 grid. No new details or decorations, no purple, no gems, no glow, no mist, no bloom, no gradients, no extra pixels, no antialiasing or shadow. Vanilla Minecraft texture palette edit, NOT an illustration.
+
+## chestplate
+
+PRECISE PALETTE SWAP ONLY. Attached PNG is an enlarged original vanilla Minecraft chestplate inventory sprite, exactly 16x16 source pixels enlarged to 1024x1024. Keep EVERY PIXEL'S POSITION and EXACT silhouette, empty regions and alignment. Change only opaque netherite METAL colors to restrained Mithryl: dark outline #33494d, dark #4c666b, mid #77989b, light #aec9c9, highlight #d7e5e2. Keep brown wooden handles in their existing brown palette. Keep flat opaque squares and transparent squares as in reference. Output same full square canvas and same 16x16 grid. No new details or decorations, no purple, no gems, no glow, no mist, no bloom, no gradients, no extra pixels, no antialiasing or shadow. Vanilla Minecraft texture palette edit, NOT an illustration.
+
+## leggings
+
+PRECISE PALETTE SWAP ONLY. Attached PNG is an enlarged original vanilla Minecraft leggings inventory sprite, exactly 16x16 source pixels enlarged to 1024x1024. Keep EVERY PIXEL'S POSITION and EXACT silhouette, empty regions and alignment. Change only opaque netherite METAL colors to restrained Mithryl: dark outline #33494d, dark #4c666b, mid #77989b, light #aec9c9, highlight #d7e5e2. Keep brown wooden handles in their existing brown palette. Keep flat opaque squares and transparent squares as in reference. Output same full square canvas and same 16x16 grid. No new details or decorations, no purple, no gems, no glow, no mist, no bloom, no gradients, no extra pixels, no antialiasing or shadow. Vanilla Minecraft texture palette edit, NOT an illustration.
+
+## boots
+
+PRECISE PALETTE SWAP ONLY. The attached PNG is an enlarged original vanilla Minecraft boots inventory sprite, exactly 16x16 source pixels scaled to 1024x1024. Keep EVERY PIXEL'S POSITION and the EXACT silhouette, empty regions and alignment. Change only the opaque netherite colors to a restrained Mithryl metal ramp: dark outline #33494d, dark #4c666b, mid #77989b, light #aec9c9, highlight #d7e5e2. Keep all filled squares completely flat and opaque, and all currently transparent squares completely transparent. Preserve the exact shapes: TWO separate squat boots, no more detail than the original. No new decorations, no purple, no glow, no mist, no bloom, no gradients, no extra pixels, no antialiasing, no shadow. Output the same full square canvas with the same 16x16 grid, not a reinterpretation or illustration. Minecraft vanilla texture file recolored to Mithryl.
+
+## shard
+
+Palette edit of the attached enlarged 16x16 vanilla prismarine crystals. Preserve the exact outline and separate crystal pieces, all pixel positions and transparency. Recolor to restrained Mithryl silver-teal: #33494d outline, #4c666b dark, #77989b mid, #aec9c9 light, #d7e5e2 highlight. Each source pixel is one solid flat square. NO gradients, glow, mist, antialiasing, gems, decorations, additional detail, shadows outside shapes, background or text. Stay strictly vanilla Minecraft in style and source pixel density. Preserve full canvas borders, no cropping.
+
+## ingot
+
+Palette edit of the attached enlarged 16x16 vanilla prismarine shard sprite, used as a Mithryl ingot. Preserve the exact shard silhouette and every pixel position. Recolor to restrained Mithryl silver-teal: #33494d outline, #4c666b dark, #77989b mid, #aec9c9 light, #d7e5e2 highlight. Keep the original simple internal planes. Each source pixel is one solid flat square. NO gradients, glow, mist, antialiasing, gems, decorations, additional detail, shadows outside shapes, background or text. Stay strictly vanilla Minecraft in style and source pixel density. Preserve full canvas borders, no cropping.
+
+## template
+
+Edit the attached enlarged 16x16 vanilla netherite upgrade template. Preserve exact canvas, silhouette, pixel layout and arrow glyph. Replace only the red netherrack base colors with pale yellow-beige End stone colors (dark ochre edge, beige medium, pale cream highlights) and replace cyan arrow with muted silver-teal Mithryl #4c666b #77989b #aec9c9. Same vanilla simple upgrade tablet. Each source pixel is one solid flat square. NO gradients, glow, mist, antialiasing, gems, decorations, additional detail, shadows outside shapes, background or text. Stay strictly vanilla Minecraft in style and source pixel density. Preserve full canvas borders, no cropping.
+
+## ore
+
+Edit attached enlarged 16x16 vanilla End stone tile into Mithryl ore. Preserve the 16x16 pixel grid and original pale yellow end stone base, with five small irregular 2-3 pixel ore clusters embedded across it. Ore uses muted silver teal #4c666b #77989b #aec9c9, with one small dark border and light glint each, like a vanilla Minecraft ore. Most surface remains end stone. Entire square tile fully opaque, flat front-on block face; no perspective cube. Each source pixel is one solid flat square. NO gradients, glow, mist, antialiasing, gems, decorations, additional detail, shadows outside shapes, background or text. Stay strictly vanilla Minecraft in style and source pixel density. Preserve full canvas borders, no cropping.
+
+## block
+
+Palette edit the attached enlarged vanilla 16x16 iron block tile into a Mithryl storage block. Keep EXACT same minimal pixel pattern and layout, same very subtle beveled border and broad plain center. Recolor iron grayscale to pale subdued silver teal, mostly #aec9c9, highlights #d7e5e2, bevel shadow #77989b. No strong dark outline, no ornate patterns. Entire square tile fully opaque. Flat front-on block face, no perspective cube. Each source pixel is one solid flat square. NO gradients, glow, mist, antialiasing, gems, decorations, additional detail, shadows outside shapes, background or text. Stay strictly vanilla Minecraft in style and source pixel density. Preserve full canvas borders, no cropping.
+
+## humanoid
+
+Precise palette swap ONLY of attached Minecraft armor UV texture atlas. It is a 64x32 texture enlarged to 1024x512. Preserve EVERY opaque and transparent square, exact UV islands and positions including head arms torso and boots. Recolor dark netherite metal to Mithryl: outline #33494d, dark #4c666b, mid #77989b, light #aec9c9, highlight #d7e5e2. Preserve simple vanilla pattern. Output same 2:1 rectangular canvas with all transparent unused space. Never rearrange or enlarge parts. Each source pixel is one solid flat square. NO gradients, glow, mist, antialiasing, gems, decorations, additional detail, shadows outside shapes, background or text. Stay strictly vanilla Minecraft in style and source pixel density. Preserve full canvas borders, no cropping.
+
+## humanoid_leggings
+
+Precise palette swap ONLY of attached Minecraft leggings armor UV texture atlas. It is a 64x32 texture enlarged to 1024x512. Preserve EVERY opaque and transparent square, exact UV islands and positions. Most canvas is empty transparent and MUST stay so. Recolor dark netherite metal to Mithryl: outline #33494d, dark #4c666b, mid #77989b, light #aec9c9, highlight #d7e5e2. Preserve simple vanilla pattern. Output same 2:1 rectangular canvas. Never rearrange or enlarge parts. Each source pixel is one solid flat square. NO gradients, glow, mist, antialiasing, gems, decorations, additional detail, shadows outside shapes, background or text. Stay strictly vanilla Minecraft in style and source pixel density. Preserve full canvas borders, no cropping.
+
+## rib_humanoid
+
+Precise edit of attached Minecraft RIB armor trim UV mask, 64x32 enlarged to1024x512. Preserve EXACT UV positions, thickness, and all transparent pixels, this is a sparse texture atlas NOT an illustration. Make a subtle custom rib variant by replacing its three grayscale tones with three closely related cool silver tones #859f9f #aec9c9 #d7e5e2. Same 2:1 canvas. No new elements. Each source pixel is one solid flat square. NO gradients, glow, mist, antialiasing, gems, decorations, additional detail, shadows outside shapes, background or text. Stay strictly vanilla Minecraft in style and source pixel density. Preserve full canvas borders, no cropping.
+
+## rib_humanoid_leggings
+
+Precise edit of attached Minecraft RIB leggings trim UV mask, 64x32 enlarged to1024x512. Preserve EXACT UV positions, thickness, and all transparent pixels, this is a very sparse texture atlas NOT an illustration. Make a subtle custom rib variant by replacing its three grayscale tones with three closely related cool silver tones #859f9f #aec9c9 #d7e5e2. Same 2:1 canvas. No new elements. Each source pixel is one solid flat square. NO gradients, glow, mist, antialiasing, gems, decorations, additional detail, shadows outside shapes, background or text. Stay strictly vanilla Minecraft in style and source pixel density. Preserve full canvas borders, no cropping.
+

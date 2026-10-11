@@ -1,0 +1,24 @@
+# EndUpdate / Paper 26.3. Standardwerte funktionieren ohne Plugin-Konfiguration.
+ore:
+  outer-island-radius: 1024
+  chunk-chance: 0.32
+  attempts-per-chunk: 5
+  # Auch bereits existierende Chunks werden einmalig beim Laden bestueckt.
+  generate-in-existing-chunks: true
+loot:
+  template-chance: 0.30
+  shards-chance: 0.45
+  ingot-chance: 0.10
+  bonus-chance: 0.35
+tools:
+  mining-speed-multiplier: 1.30
+  attack-speed-multiplier: 1.20
+resource-pack:
+  enabled: true
+  required: false
+  # 0 = Minecraft-Port + 1, normalerweise TCP 25566.
+  port: 0
+  bind-address: '0.0.0.0'
+  # Leer = Adresse, mit der der Spieler verbunden ist.
+  # Bei Proxy/SRV/NAT kann eine oeffentlich erreichbare URL angegeben werden.
+  public-url: ''

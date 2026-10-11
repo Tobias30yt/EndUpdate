@@ -1,0 +1,6 @@
+target/
+.tools/
+.test-server/
+*.log
+*.jar
+.idea/

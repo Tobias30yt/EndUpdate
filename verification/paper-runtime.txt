@@ -1,0 +1,5 @@
+[16:56:15] [ServerMain/INFO]: [bootstrap] Loading Paper 26.3-145-main@6bc56ab (2026-10-03T13:41:10Z) for Minecraft 26.3
+[16:56:22] [Server thread/INFO]: This server is running Paper version 26.3-145-main@6bc56ab (2026-10-03T13:41:10Z) (Implementing API version 26.3.build.145-beta)
+[16:56:24] [Server thread/INFO]: [EndUpdate] Embedded resource pack: TCP 25586/endupdate/061ef83ef0ba53cac4b4e34b5064ef52701089e6.zip (this port must be reachable by players).
+[16:56:24] [Server thread/INFO]: [EndUpdate] EndUpdate enabled: 9 Mithryl upgrades, End City loot, surface ore and resource pack.
+[16:56:26] [Server thread/INFO]: [EndUpdateVerification] PASS: 123 integration assertions on Paper 26.3

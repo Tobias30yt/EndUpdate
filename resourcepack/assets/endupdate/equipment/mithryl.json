@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "endupdate:mithryl"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "endupdate:mithryl"
+      }
+    ]
+  }
+}

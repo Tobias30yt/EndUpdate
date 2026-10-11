@@ -1,0 +1,10 @@
+{
+  "ore": {
+    "path": "C:\\Users\\psche\\.codex\\generated_images\\01a12a64-c60a-75a0-af85-b140f385e668\\exec-08dd7837-690c-4e2e-9516-94a2d769087b.png",
+    "prompt": "Use case: stylized-concept. Game asset: one flat square Minecraft block FACE TEXTURE, full bleed opaque, tileable edges. Mithryl ore embedded in pale yellow-ivory End stone. Scattered small angular silvery-cyan crystal veins with occasional muted violet pixels. The end stone should dominate about 70 percent of tile, crystals 30 percent. Match natural Minecraft ore blocks. The image is a 32 by 32 pixel texture shown enlarged with hard square pixels, maximum 12 colors. Orthographic face only, no cube, no perspective, no text, no border outside the tile, no glow, no transparent margin. Designed to fit vanilla Minecraft with existing Mithryl silver/cyan/violet equipment."
+  },
+  "block": {
+    "path": "C:\\Users\\psche\\.codex\\generated_images\\01a12a64-c60a-75a0-af85-b140f385e668\\exec-fd404056-348b-487e-927c-d46f4c3ed8e3.png",
+    "prompt": "Use case: stylized-concept. Game asset: one flat square Minecraft block FACE TEXTURE, full bleed opaque, tileable edges. A solid block of Mithryl metal. Silvery icy turquoise metal face with a subtle stepped bevel around the edges, flat central hammered metal facets, dark desaturated teal shadows and tiny muted violet corner inlays. Restrained vanilla Minecraft mineral block, like diamond or iron blocks, not a gemstone illustration. The image is a 32 by 32 pixel texture shown enlarged with hard square pixels, maximum 12 colors. Orthographic face only, no cube, no perspective, no text, no border outside the tile, no glow, no transparent margin. Designed to fit vanilla Minecraft with existing Mithryl silver/cyan/violet equipment."
+  }
+}

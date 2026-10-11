@@ -1,0 +1,5 @@
+name: EndUpdateVerification
+version: 1.0.0
+main: de.midnitesmp.endupdate.verify.VerificationPlugin
+api-version: '26.3'
+depend: [EndUpdate]

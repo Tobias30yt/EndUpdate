@@ -1,0 +1,24 @@
+name: EndUpdate
+version: 1.0.1
+main: de.midnitesmp.endupdate.EndUpdatePlugin
+api-version: '26.3'
+description: Mithryl, neue End-City-Schaetze und ein integriertes Ressourcenpaket.
+author: MidniteSMP
+commands:
+  mithryl:
+    description: Gibt einem Spieler Mithryl-Ingots oder andere Mithryl-Gegenstaende.
+    usage: /mithryl give <player> [item] [amount]
+    aliases: [mythril, givemithryl, givemythril]
+    permission: endupdate.admin
+  speed:
+    description: Schaltet deinen Mithryl-Speedbonus um.
+    usage: /speed [on|off]
+    permission: endupdate.speed
+  endupdate:
+    description: Mithryl-Hilfe und Admin-Werkzeuge.
+    usage: /endupdate [give <player> <item> [amount]|pack|status|help]
+permissions:
+  endupdate.speed:
+    default: true
+  endupdate.admin:
+    default: op
