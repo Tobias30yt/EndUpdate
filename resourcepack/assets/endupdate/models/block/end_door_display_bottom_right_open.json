@@ -1,0 +1,71 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "bottom": "endupdate:block/end_door_bottom",
+    "top": "endupdate:block/end_door_top",
+    "particle": "endupdate:block/end_door_bottom"
+  },
+  "elements": [
+    {
+      "from": [
+        -0.02,
+        -0.02,
+        -0.02
+      ],
+      "to": [
+        3.02,
+        16.02,
+        16.02
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            16,
+            16,
+            0,
+            13
+          ],
+          "texture": "#bottom",
+          "rotation": 90
+        },
+        "north": {
+          "uv": [
+            3,
+            0,
+            0,
+            16
+          ],
+          "texture": "#bottom"
+        },
+        "south": {
+          "uv": [
+            3,
+            0,
+            0,
+            16
+          ],
+          "texture": "#bottom"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#bottom"
+        },
+        "east": {
+          "uv": [
+            16,
+            0,
+            0,
+            16
+          ],
+          "texture": "#bottom"
+        }
+      }
+    }
+  ],
+  "parent": "minecraft:block/block"
+}

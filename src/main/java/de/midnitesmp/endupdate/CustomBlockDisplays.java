@@ -4,6 +4,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Orientable;
 import org.bukkit.block.data.type.Door;
@@ -12,6 +13,12 @@ import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Event;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -28,12 +35,15 @@ public final class CustomBlockDisplays implements Listener {
     private final NamespacedKey position;
     private final NamespacedKey blockId;
     private final MithrylItems items;
+    private final EndUpdatePlugin plugin;
+    private final Set<Location> pendingChanges = new HashSet<>();
     private final Set<ChunkRef> activeChunks = new HashSet<>();
     private boolean initialized;
 
     private record ChunkRef(World world, int x, int z) {}
 
     public CustomBlockDisplays(EndUpdatePlugin plugin, MithrylItems items) {
+        this.plugin = plugin;
         marker = plugin.key("custom_block_display");
         position = plugin.key("custom_block_position");
         blockId = plugin.key("custom_block_id");
@@ -56,10 +66,12 @@ public final class CustomBlockDisplays implements Listener {
             if (entity.getPersistentDataContainer().has(marker, PersistentDataType.BYTE)
                     && at != null && at == encoded) {
                 if (entity instanceof ItemDisplay display) {
-                    display.setItemStack(displayStack(block, stack));
-                    display.setItemDisplayTransform(ItemDisplay.ItemDisplayTransform.NONE);
-                    display.teleport(displayLocation(block));
-                    display.setTransformation(transformation(block));
+                    ItemStack wanted = displayStack(block, stack);
+                    if (!display.getItemStack().equals(wanted)) display.setItemStack(wanted);
+                    if (display.getItemDisplayTransform()!=ItemDisplay.ItemDisplayTransform.NONE) display.setItemDisplayTransform(ItemDisplay.ItemDisplayTransform.NONE);
+                    if (!display.getLocation().equals(displayLocation(block))) display.teleport(displayLocation(block));
+                    var transform = transformation(block);
+                    if (!display.getTransformation().equals(transform)) display.setTransformation(transform);
                 }
                 return;
             }
@@ -80,11 +92,11 @@ public final class CustomBlockDisplays implements Listener {
     }
 
     private ItemStack displayStack(Block block, ItemStack stack) {
-        if (!(block.getBlockData() instanceof Door door)) return stack;
+        var state = HingedBlockModels.of(block.getBlockData());
+        if (state == null) return stack;
         ItemStack displayItem = stack.clone();
         ItemMeta meta = displayItem.getItemMeta();
-        meta.setItemModel(new NamespacedKey(marker.getNamespace(),
-            door.getHalf() == Door.Half.TOP ? "end_door_display_top" : "end_door_display_bottom"));
+        meta.setItemModel(new NamespacedKey(marker.getNamespace(), state.model()));
         displayItem.setItemMeta(meta);
         return displayItem;
     }
@@ -94,23 +106,11 @@ public final class CustomBlockDisplays implements Listener {
     }
 
     private org.bukkit.util.Transformation transformation(Block block) {
+        var state = HingedBlockModels.of(block.getBlockData());
+        if (state != null) return state.transformation();
         var rotation = new org.joml.Quaternionf();
         float scale = 1.05f;
-        if (block.getBlockData() instanceof Door door) {
-            float yaw = switch (door.getFacing()) {
-                case SOUTH -> 0;
-                case WEST -> (float) (Math.PI / 2);
-                case NORTH -> (float) Math.PI;
-                case EAST -> (float) (Math.PI * 1.5);
-                default -> 0;
-            };
-            if (door.isOpen()) {
-                yaw += door.getHinge() == Door.Hinge.RIGHT
-                    ? (float) (Math.PI / 2) : (float) (-Math.PI / 2);
-            }
-            rotation.rotationY(yaw);
-            scale = 1.0f;
-        } else if (block.getBlockData() instanceof Orientable orientable) {
+        if (block.getBlockData() instanceof Orientable orientable) {
             switch (orientable.getAxis()) {
                 case X -> rotation.rotationZ((float) (Math.PI / 2));
                 case Z -> rotation.rotationX((float) (Math.PI / 2));
@@ -150,6 +150,55 @@ public final class CustomBlockDisplays implements Listener {
     public void restore(Block block, String id) {
         if (id.isEmpty()) return;
         show(block, id, items.create(id));
+    }
+
+    private static boolean hinged(String id) { return "end_door".equals(id) || "end_trapdoor".equals(id); }
+
+    private void refreshHinged(Block block) {
+        String id = block.getChunk().getPersistentDataContainer()
+            .get(pluginKey("wood_"+Integer.toHexString(encode(block))), PersistentDataType.STRING);
+        if (hinged(id) && EndWood.MATERIALS.get(id) == block.getType()) restore(block,id);
+        else remove(block);
+    }
+
+    private void queueHinged(Block block) {
+        if (block.getType()!=org.bukkit.Material.CHERRY_DOOR && block.getType()!=org.bukkit.Material.CHERRY_TRAPDOOR) return;
+        String id = block.getChunk().getPersistentDataContainer()
+            .get(pluginKey("wood_"+Integer.toHexString(encode(block))), PersistentDataType.STRING);
+        if (!hinged(id)) return;
+        queueLocation(block.getLocation());
+        if (block.getBlockData() instanceof Door door)
+            queueLocation(block.getLocation().add(0,door.getHalf()==Door.Half.TOP?-1:1,0));
+    }
+
+    private void queueLocation(Location location) {
+        if (!pendingChanges.add(location)) return;
+        // Read the committed state, after vanilla/other plugins have processed the click or power.
+        Bukkit.getScheduler().runTask(plugin,()->{
+            pendingChanges.remove(location);
+            if (location.isWorldLoaded() && location.getWorld().isChunkLoaded(location.getBlockX()>>4,location.getBlockZ()>>4))
+                refreshHinged(location.getBlock());
+        });
+    }
+
+    @EventHandler(priority=EventPriority.MONITOR,ignoreCancelled=true)
+    public void interact(PlayerInteractEvent event) {
+        if (event.getAction()==Action.RIGHT_CLICK_BLOCK && event.getClickedBlock()!=null && event.useInteractedBlock()!=Event.Result.DENY)
+            queueHinged(event.getClickedBlock());
+    }
+    @EventHandler(priority=EventPriority.MONITOR)
+    public void redstone(BlockRedstoneEvent event) { queueHinged(event.getBlock()); }
+    @EventHandler(priority=EventPriority.MONITOR,ignoreCancelled=true)
+    public void physics(BlockPhysicsEvent event) { queueHinged(event.getBlock()); }
+
+    private void refreshHingedDisplays(Chunk chunk) {
+        // Catch state changes made directly by other plugins without a click/redstone event.
+        for (Entity entity : chunk.getEntities()) {
+            var data = entity.getPersistentDataContainer();
+            if (!data.has(marker,PersistentDataType.BYTE) || !hinged(data.get(blockId,PersistentDataType.STRING))) continue;
+            Integer encoded = data.get(position,PersistentDataType.INTEGER);
+            if (encoded != null) refreshHinged(blockAt(chunk,encoded));
+        }
     }
 
     @EventHandler
@@ -202,8 +251,10 @@ public final class CustomBlockDisplays implements Listener {
             }
         }
         for (ChunkRef current : desired) {
-            if (!activeChunks.contains(current) && current.world().isChunkLoaded(current.x(), current.z())) {
-                restoreChunk(current.world().getChunkAt(current.x(), current.z()));
+            if (current.world().isChunkLoaded(current.x(), current.z())) {
+                Chunk chunk = current.world().getChunkAt(current.x(), current.z());
+                if (!activeChunks.contains(current)) restoreChunk(chunk);
+                else refreshHingedDisplays(chunk);
             }
         }
         activeChunks.clear();

@@ -1,0 +1,1 @@
+PASS: 525 integration assertions on Paper 26.3

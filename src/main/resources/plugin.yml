@@ -1,5 +1,5 @@
 name: EndUpdate
-version: 1.0.2
+version: 1.0.3
 main: de.midnitesmp.endupdate.EndUpdatePlugin
 api-version: '26.3'
 description: Mithryl, neue End-City-Schaetze und ein integriertes Ressourcenpaket.

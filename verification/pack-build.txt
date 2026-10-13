@@ -1,3 +1,5 @@
-41 model sprite atlases verified (no missing entity sprites or mixed atlases).
-Embedded pack matches source files. JAR SHA256: 926cea33a7c7073e463312e7a70a1da191794bac0f56afd02bd3a91ae40685ec
+52 model sprite atlases verified (no missing entity sprites or mixed atlases).
+11 hinged models: vanilla UVs, geometry, state item definitions and trapdoor parent verified.
+All vanilla model parents resolve in the supplied client JAR.
+Embedded pack matches source files. JAR SHA256: eb1863bf7d2d8a92417d3b63177db68a890e5f1f94b921744de8044f07f7f9e1
 Pack references, PNGs, transparency and format 97.1 verified.

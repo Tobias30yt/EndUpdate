@@ -4,7 +4,7 @@ Mithryl-Erze, neue End-City-Beute und Netherite-Upgrades für **Paper 26.3 / Jav
 
 ## Installation
 
-1. `EndUpdate-1.0.2.jar` in den `plugins`-Ordner legen.
+1. `EndUpdate-1.0.3.jar` in den `plugins`-Ordner legen.
 2. Server vollständig neu starten.
 3. Das beim Beitritt angebotene Ressourcenpaket akzeptieren.
 
@@ -84,7 +84,7 @@ Mit dem eingebauten Imagegen neu gestaltete **16×16-Inventar- und Blocktexturen
 
 Mithryl-Rüstung trägt ein Rib-Trim und ein eigenes Equipment-Modell. Auch die globalen Rib-Texturersetzungen wurden entfernt: normale Rüstungen und sämtliche Vanilla-Items behalten ihre ursprünglichen Texturen. Der Mithryl-Trim kann am Schmiedetisch nicht überschrieben werden.
 
-**Trader-Texturfix in 1.0.2:** Der Bewohner-Skin liegt jetzt als `endupdate:block/mithryl_villager` im Block-Texturatlas, zusammen mit den Hut- und Kleidungsakzenten. Der vorherige Pfad unter `textures/entity/` wurde für das ItemDisplay-Modell nicht als Sprite geladen. Minecraft verlangt außerdem, dass alle Modelltexturen denselben Atlas verwenden ([Mojang-Dokumentation](https://www.minecraft.net/en-us/article/minecraft-java-edition-1-21-11)). Bestehende Händler erhalten den Fix über das neue Pack; nach Austausch der JAR den Server neu starten und neu verbinden oder `/endupdate pack` ausführen. Es ist keine Neuerzeugung der Dörfer nötig.
+**Trader-Texturfix in 1.0.3:** Der Bewohner-Skin liegt jetzt als `endupdate:block/mithryl_villager` im Block-Texturatlas, zusammen mit den Hut- und Kleidungsakzenten. Der vorherige Pfad unter `textures/entity/` wurde für das ItemDisplay-Modell nicht als Sprite geladen. Minecraft verlangt außerdem, dass alle Modelltexturen denselben Atlas verwenden ([Mojang-Dokumentation](https://www.minecraft.net/en-us/article/minecraft-java-edition-1-21-11)). Bestehende Händler erhalten den Fix über das neue Pack; nach Austausch der JAR den Server neu starten und neu verbinden oder `/endupdate pack` ausführen. Es ist keine Neuerzeugung der Dörfer nötig.
 
 ## End-Dörfer und Mithryl-Bewohner
 
@@ -155,7 +155,7 @@ JDK 25+ und Maven 3.9+:
 ./build.ps1
 ```
 
-Alternativ `mvn clean package`. Maven packt `resourcepack/` automatisch als `endupdate-pack.zip` in die JAR. Ausgabe: `target/EndUpdate-1.0.2.jar`. Für einen normalen Build ist keine Bildgenerierung und kein API-Schlüssel erforderlich. `tools/prepare_vanilla_assets.py`, `tools/prepare_endwood_assets.py` und `tools/prepare_trader_assets.py` importieren bei Bedarf die gespeicherten Bildquellen; dafür wird Python mit Pillow benötigt. `tools/render_traders.py` rendert die JSON-Modelle als Vorschau. Alle fertigen Packdateien sind bereits vorhanden.
+Alternativ `mvn clean package`. Maven packt `resourcepack/` automatisch als `endupdate-pack.zip` in die JAR. Ausgabe: `target/EndUpdate-1.0.3.jar`. Für einen normalen Build ist keine Bildgenerierung und kein API-Schlüssel erforderlich. `tools/prepare_vanilla_assets.py`, `tools/prepare_endwood_assets.py` und `tools/prepare_trader_assets.py` importieren bei Bedarf die gespeicherten Bildquellen; dafür wird Python mit Pillow benötigt. `tools/render_traders.py` rendert die JSON-Modelle als Vorschau. Alle fertigen Packdateien sind bereits vorhanden.
 
 ## Prüfung
 
@@ -163,8 +163,8 @@ Am 13.10.2026 geprüft:
 
 - Build gegen Paper API `26.3.build.166-beta`, Java-Releaseziel 25.
 - Neun JUnit-Tests für Fortune-Verteilung, Inselgrenze, Set-Stufen, Chunk-Koordinaten, Dorfgrundriss und Give-Befehlsargumente.
-- Vier Python-Regressionsprüfungen für nicht geladene Entity-Sprites, gemischte Atlanten und gültige Block-/Item-Sprites. Alle 41 Packmodelle bestehen die Atlasprüfung; die vorherigen Trader-Modelle schlagen dabei reproduzierbar fehl.
-- 232 Integrationsprüfungen im isolierten Paper-26.3-Server (Build 145): Item-Metadaten, Rezepte, Upgrades, Loot, Erze, Boni, Lagerblöcke, Dreizack, natürliche Dörfer, Bäume, vier Bewohner pro Dorf, Arbeitsplatzvergabe, Berufswechsel und Berufssperre, Handelsangebote, falsche Zutaten, Vorratsauffüllung sowie alle drei Reliktfunktionen.
+- Vier Python-Regressionsprüfungen für nicht geladene Entity-Sprites, gemischte Atlanten und gültige Block-/Item-Sprites. Alle 52 Packmodelle bestehen die Atlasprüfung; die vorherigen Trader-Modelle schlagen dabei reproduzierbar fehl. Die elf Tür-/Falltürmodelle werden zusätzlich auf UVs, Geometrie und Modellverweise geprüft.
+- 525 Integrationsprüfungen im isolierten Paper-26.3-Server (Build 145): Item-Metadaten, Rezepte, Upgrades, Loot, Erze, Boni, Lagerblöcke, Dreizack, natürliche Dörfer, Bäume, vier Bewohner pro Dorf, Arbeitsplatzvergabe, Berufswechsel und Berufssperre, Handelsangebote, falsche Zutaten, Vorratsauffüllung sowie alle drei Reliktfunktionen. Dazu alle 32 Tür- und 16 Falltürzustände gegen Vanilla-UV-Zustände und tatsächliche Paper-Kollisionsflächen sowie Aktualisierung bei Interaktion, Redstone und Physik.
 - Ein vollständiger Testserver-Neustart bestätigt gespeicherte Bewohner-UUIDs, feste Berufe und verbrauchte Handelsvorräte. Spieler und Inventar-Views werden im Prüfplugin simuliert; kein echter Client war verbunden.
 - HTTP-Download mit SHA-1-Abgleich, Modell-/Texturreferenzen, PNG-Größen, vollständiger Abgleich mit der eingebetteten ZIP und Prüfung auf **null Vanilla-Dateiüberschreibungen**.
 
@@ -177,5 +177,5 @@ Technische Referenzen: [Paper-Projektsetup](https://docs.papermc.io/paper/dev/pr
 - Claims: _[Paper 1.5.5](https://github.com/Tobias30yt/Claims/releases/tag/paper-1.5.5)_
 - Claims Client Mod: _[1.31.6](https://github.com/Tobias30yt/Claims-Client/releases/tag/v1.31.6)_
 - Reports: _[1.2.36](https://github.com/Tobias30yt/Reports/releases/tag/v1.2.36)_
-- EndUpdate: _[1.0.2](https://github.com/Tobias30yt/EndUpdate/releases/tag/v1.0.2)_
+- EndUpdate: _[1.0.3](https://github.com/Tobias30yt/EndUpdate/releases/tag/v1.0.3)_
 - GrimAC: _[Modrinth](https://modrinth.com/plugin/grimac)_

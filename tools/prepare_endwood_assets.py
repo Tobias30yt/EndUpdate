@@ -2,6 +2,7 @@
 from pathlib import Path
 from PIL import Image, ImageDraw
 import json, shutil
+from prepare_hinged_models import generate as generate_hinged_models
 root=Path(__file__).resolve().parents[1]
 pack=root/'resourcepack'
 manifest=json.loads((root/'tools/endwood-assets.json').read_text('utf-8'))
@@ -26,3 +27,4 @@ for name in ['log','wood','stripped_log','stripped_wood','planks','stairs','slab
 sheet.save(root/'art/endwood-preview.png')
 (root/'art/ENDWOOD-PROMPTS.md').write_text('# End wood textures\n\nBuilt-in Imagegen with vanilla texture references. Originals: `art/generated/endwood/`. Nearest-neighbor import at 16×16.\n\n'+''.join('## '+n+'\n\n'+e['prompt']+'\n\n' for n,e in manifest.items()),'utf-8')
 print('Imported eleven End wood textures and fifteen custom item definitions.')
+generate_hinged_models()

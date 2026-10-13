@@ -1,10 +1,14 @@
 """Validate resource references, dimensions, alpha and embedded ZIP equality."""
-import json, zipfile, hashlib, io
+import json, zipfile, hashlib, io, argparse
 from pathlib import Path
 from PIL import Image
 from model_atlas import validate_pack_models
 root=Path(__file__).resolve().parents[1]
 pack=root/'resourcepack'
+parser=argparse.ArgumentParser()
+parser.add_argument('--vanilla-client',type=Path,help='Optional Minecraft client JAR for vanilla parent resolution')
+args=parser.parse_args()
+vanilla=zipfile.ZipFile(args.vanilla_client) if args.vanilla_client else None
 print(f'{validate_pack_models(pack)} model sprite atlases verified (no missing entity sprites or mixed atlases).')
 for path in (pack/'assets/endupdate/items').glob('*.json'):
     data=json.loads(path.read_text('utf-8'))
@@ -16,6 +20,12 @@ for path in (pack/'assets/endupdate/items').glob('*.json'):
     assert target.exists(),target
 for path in pack.rglob('*.json'):
     data=json.loads(path.read_text('utf-8'))
+    parent=data.get('parent')
+    if parent:
+        namespace, ref=parent.split(':',1) if ':' in parent else ('minecraft',parent)
+        target=f'assets/{namespace}/models/{ref}.json'
+        if namespace=='endupdate': assert (pack/target).exists(),f'{path}: missing parent {parent}'
+        elif vanilla and namespace=='minecraft': assert target in vanilla.namelist(),f'{path}: missing vanilla parent {parent}'
     for ref in data.get('textures',{}).values():
         if isinstance(ref,str) and ref.startswith('endupdate:'):
             target=pack/'assets/endupdate/textures'/(ref.split(':',1)[1]+'.png')
@@ -51,7 +61,26 @@ assert not any((pack/'assets/minecraft/textures/block').glob('*.png'))
 assert not any((pack/'assets/minecraft/textures/item').glob('*.png'))
 assert not any(p.is_file() for p in (pack/'assets/minecraft').rglob('*')), 'No vanilla asset overrides allowed'
 assert json.loads((pack/'pack.mcmeta').read_text('utf-8'))['pack']['min_format']==[97,1]
-jar=root/'target/EndUpdate-1.0.2.jar'
+# Keep the vanilla face/UV layout: door hinges and upside-down open trapdoors
+# require distinct states, even when their collision boxes happen to coincide.
+fixture=json.loads((root/'tools/fixtures/hinged-vanilla-models.json').read_text('utf-8'))
+for name,source in fixture['models'].items():
+    target=('end_door_display_'+name.removeprefix('door_') if name.startswith('door_')
+            else 'end_trapdoor_display_'+name.removeprefix('template_orientable_trapdoor_'))
+    model=json.loads((pack/f'assets/endupdate/models/block/{target}.json').read_text('utf-8'))
+    assert model['parent']=='minecraft:block/block'
+    assert len(model['elements'])==len(source['elements'])
+    for actual,expected in zip(model['elements'],source['elements']):
+        assert actual['faces']=={direction:{key:value for key,value in face.items() if key!='cullface'} for direction,face in expected['faces'].items()},target
+        for face in actual['faces'].values(): assert face['texture'][1:] in model['textures'],target
+        for axis in range(3):
+            assert abs(actual['from'][axis]-(expected['from'][axis]-.02))<1e-6,target
+            assert abs(actual['to'][axis]-(expected['to'][axis]+.02))<1e-6,target
+    assert (pack/f'assets/endupdate/items/{target}.json').exists(),target
+assert json.loads((pack/'assets/endupdate/models/block/end_trapdoor.json').read_text('utf-8'))['parent']=='endupdate:block/end_trapdoor_display_bottom'
+print('11 hinged models: vanilla UVs, geometry, state item definitions and trapdoor parent verified.')
+if vanilla: vanilla.close();print('All vanilla model parents resolve in the supplied client JAR.')
+jar=root/'target/EndUpdate-1.0.3.jar'
 if jar.exists():
     with zipfile.ZipFile(jar) as j:
         with zipfile.ZipFile(io.BytesIO(j.read('endupdate-pack.zip'))) as z:

@@ -1,21 +1,3 @@
 {
-  "textures": {
-    "door": "endupdate:block/end_door_top",
-    "edge": "endupdate:block/end_planks",
-    "particle": "endupdate:block/end_door_top"
-  },
-  "elements": [
-    {
-      "from": [0, 0, 6],
-      "to": [16, 16, 10],
-      "faces": {
-        "north": { "texture": "#door" },
-        "south": { "texture": "#door" },
-        "east": { "texture": "#edge" },
-        "west": { "texture": "#edge" },
-        "up": { "texture": "#edge" },
-        "down": { "texture": "#edge" }
-      }
-    }
-  ]
+  "parent": "endupdate:block/end_door_display_top_left"
 }

@@ -167,10 +167,69 @@ public final class VerificationPlugin extends JavaPlugin {
         speed.toggle(player,false);check(!effects.containsKey(PotionEffectType.SPEED)&&!speed.enabled(player),"toggle removes own speed and persists");
         effects.put(PotionEffectType.SPEED,new PotionEffect(PotionEffectType.SPEED,1000,2));speed.toggle(player,true);check(effects.get(PotionEffectType.SPEED).getAmplifier()==2,"strong external speed preserved");speed.toggle(player,false);check(effects.containsKey(PotionEffectType.SPEED),"toggle preserves external speed");
         checkEndVillage(plugin,items,end,player);
+        checkHingedModels(plugin,items,end,player);
         plugin.reloadConfig();
         naturalChecks(0);
         }catch(Throwable ex){getLogger().log(java.util.logging.Level.SEVERE,"INTEGRATION FAILED",ex);try{Files.writeString(Path.of("integration-result.txt"),"FAIL: "+ex);}catch(Exception ignored){}}},2);
     }
+    @SuppressWarnings("unchecked")
+    void checkHingedModels(EndUpdatePlugin plugin,MithrylItems items,World end,Player player) throws Exception {
+        var fixture=com.google.gson.JsonParser.parseString(Files.readString(Path.of("../tools/fixtures/hinged-vanilla-models.json"))).getAsJsonObject();
+        Map<String,com.google.gson.JsonObject> models=new HashMap<>();
+        try(var zip=new java.util.zip.ZipInputStream(plugin.getResource("endupdate-pack.zip"))){
+            for(var entry=zip.getNextEntry();entry!=null;entry=zip.getNextEntry())
+                if(entry.getName().startsWith("assets/endupdate/models/block/")&&entry.getName().endsWith(".json"))
+                    models.put(entry.getName(),com.google.gson.JsonParser.parseString(new String(zip.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject());
+        }
+        CustomBlockDisplays displays=new CustomBlockDisplays(plugin,items);
+        Method stackMethod=CustomBlockDisplays.class.getDeclaredMethod("displayStack",Block.class,ItemStack.class);stackMethod.setAccessible(true);
+        Block block=end.getBlockAt(2050,180,2050);
+        for(String kind:List.of("door","trapdoor")){
+            for(var variant:fixture.getAsJsonObject("states").getAsJsonObject(kind).entrySet()){
+                var expected=variant.getValue().getAsJsonObject();
+                var data=Bukkit.createBlockData("minecraft:cherry_"+kind+"["+variant.getKey()+"]");
+                block.setBlockData(data,false);
+                var state=HingedBlockModels.of(data);
+                String expectedModel=expected.get("model").getAsString().replace("minecraft:block/cherry_"+kind+"_","end_"+kind+"_display_");
+                check(state.model().equals(expectedModel),"model for "+variant.getKey());
+                check(state.x()==(expected.has("x")?expected.get("x").getAsInt():0)&&state.y()==(expected.has("y")?expected.get("y").getAsInt():0),"vanilla UV rotation for "+variant.getKey());
+                ItemStack selected=(ItemStack)stackMethod.invoke(displays,block,items.create("end_"+kind));
+                check(selected.getItemMeta().getItemModel().equals(plugin.key(expectedModel)),"display item selects state model");
+                var element=models.get("assets/endupdate/models/block/"+state.model()+".json").getAsJsonArray("elements").get(0).getAsJsonObject();
+                double[] min={Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY}, max={Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY};
+                for(int corner=0;corner<8;corner++){
+                    float[] v=new float[3];for(int axis=0;axis<3;axis++)v[axis]=element.getAsJsonArray((corner&(1<<axis))==0?"from":"to").get(axis).getAsFloat()/16f-.5f;
+                    var point=new org.joml.Vector3f(v[0],v[1],v[2]).rotate(state.transformation().getLeftRotation()).add(.5f,.5f,.5f);
+                    for(int axis=0;axis<3;axis++){min[axis]=Math.min(min[axis],point.get(axis));max[axis]=Math.max(max[axis],point.get(axis));}
+                }
+                var bounds=block.getBoundingBox();double[] physicalMin={bounds.getMinX()-block.getX(),bounds.getMinY()-block.getY(),bounds.getMinZ()-block.getZ()},physicalMax={bounds.getMaxX()-block.getX(),bounds.getMaxY()-block.getY(),bounds.getMaxZ()-block.getZ()};
+                for(int axis=0;axis<3;axis++)check(Math.abs(min[axis]-(physicalMin[axis]-.02/16))<.00001&&Math.abs(max[axis]-(physicalMax[axis]+.02/16))<.00001,"display geometry matches Paper collision: "+kind+" "+variant.getKey()+" axis "+axis);
+            }
+        }
+        Field pendingField=CustomBlockDisplays.class.getDeclaredField("pendingChanges");pendingField.setAccessible(true);
+        Set<Location> pending=(Set<Location>)pendingField.get(displays);
+        block.setBlockData(Bukkit.createBlockData("minecraft:cherry_door[half=lower]"),false);
+        int at=MithrylRules.encode(block.getX(),block.getY(),block.getZ(),end.getMinHeight());
+        var key=plugin.key("wood_"+Integer.toHexString(at));
+        block.getChunk().getPersistentDataContainer().set(key,PersistentDataType.STRING,"end_door");
+        var click=new org.bukkit.event.player.PlayerInteractEvent(player,org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK,null,block,org.bukkit.block.BlockFace.NORTH);
+        click.setUseInteractedBlock(org.bukkit.event.Event.Result.ALLOW);
+        displays.interact(click);
+        check(pending.contains(block.getLocation())&&pending.contains(block.getLocation().add(0,1,0)),"empty-hand click refreshes both door halves");
+        displays.redstone(new org.bukkit.event.block.BlockRedstoneEvent(block,0,15));
+        check(pending.size()==2,"redstone and click updates deduplicated");
+        pending.clear();click.setUseInteractedBlock(org.bukkit.event.Event.Result.DENY);displays.interact(click);
+        check(pending.isEmpty(),"denied block interaction does not schedule display update");
+        block.getChunk().getPersistentDataContainer().remove(key);
+        displays.redstone(new org.bukkit.event.block.BlockRedstoneEvent(block,0,15));
+        check(pending.isEmpty(),"ordinary vanilla door ignored");
+        block.setBlockData(Bukkit.createBlockData("minecraft:cherry_trapdoor[half=top,open=true]"),false);
+        block.getChunk().getPersistentDataContainer().set(key,PersistentDataType.STRING,"end_trapdoor");
+        displays.physics(new org.bukkit.event.block.BlockPhysicsEvent(block,block.getBlockData()));
+        check(pending.equals(Set.of(block.getLocation())),"trapdoor physics refreshes one block");
+        block.getChunk().getPersistentDataContainer().remove(key);block.setType(Material.AIR,false);
+    }
+
     void checkEndVillage(EndUpdatePlugin plugin,MithrylItems items,World end,Player player) throws Exception {
         CustomBlockDisplays displays=new CustomBlockDisplays(plugin,items);
         EndWood wood=Arrays.stream(org.bukkit.event.world.StructureGrowEvent.getHandlerList().getRegisteredListeners()).map(r->r.getListener()).filter(l->l instanceof EndWood).map(l->(EndWood)l).findFirst().orElseThrow();

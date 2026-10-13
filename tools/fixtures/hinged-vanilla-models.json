@@ -1,0 +1,1014 @@
+{
+  "source": "Minecraft Java 1.21.11 block models and states; matched against Paper 26.3 collision boxes in integration checks.",
+  "models": {
+    "door_bottom_left": {
+      "ambientocclusion": false,
+      "textures": {
+        "particle": "#bottom"
+      },
+      "elements": [
+        {
+          "from": [
+            0,
+            0,
+            0
+          ],
+          "to": [
+            3,
+            16,
+            16
+          ],
+          "faces": {
+            "down": {
+              "uv": [
+                16,
+                13,
+                0,
+                16
+              ],
+              "texture": "#bottom",
+              "cullface": "down",
+              "rotation": 90
+            },
+            "north": {
+              "uv": [
+                3,
+                0,
+                0,
+                16
+              ],
+              "texture": "#bottom",
+              "cullface": "north"
+            },
+            "south": {
+              "uv": [
+                0,
+                0,
+                3,
+                16
+              ],
+              "texture": "#bottom",
+              "cullface": "south"
+            },
+            "west": {
+              "uv": [
+                0,
+                0,
+                16,
+                16
+              ],
+              "texture": "#bottom",
+              "cullface": "west"
+            },
+            "east": {
+              "uv": [
+                16,
+                0,
+                0,
+                16
+              ],
+              "texture": "#bottom"
+            }
+          }
+        }
+      ]
+    },
+    "door_bottom_left_open": {
+      "ambientocclusion": false,
+      "textures": {
+        "particle": "#bottom"
+      },
+      "elements": [
+        {
+          "from": [
+            0,
+            0,
+            0
+          ],
+          "to": [
+            3,
+            16,
+            16
+          ],
+          "faces": {
+            "down": {
+              "uv": [
+                0,
+                16,
+                16,
+                13
+              ],
+              "texture": "#bottom",
+              "cullface": "down",
+              "rotation": 90
+            },
+            "north": {
+              "uv": [
+                0,
+                0,
+                3,
+                16
+              ],
+              "texture": "#bottom",
+              "cullface": "north"
+            },
+            "south": {
+              "uv": [
+                0,
+                0,
+                3,
+                16
+              ],
+              "texture": "#bottom",
+              "cullface": "south"
+            },
+            "west": {
+              "uv": [
+                16,
+                0,
+                0,
+                16
+              ],
+              "texture": "#bottom",
+              "cullface": "west"
+            },
+            "east": {
+              "uv": [
+                0,
+                0,
+                16,
+                16
+              ],
+              "texture": "#bottom"
+            }
+          }
+        }
+      ]
+    },
+    "door_bottom_right": {
+      "ambientocclusion": false,
+      "textures": {
+        "particle": "#bottom"
+      },
+      "elements": [
+        {
+          "from": [
+            0,
+            0,
+            0
+          ],
+          "to": [
+            3,
+            16,
+            16
+          ],
+          "faces": {
+            "down": {
+              "uv": [
+                0,
+                13,
+                16,
+                16
+              ],
+              "texture": "#bottom",
+              "cullface": "down",
+              "rotation": 90
+            },
+            "north": {
+              "uv": [
+                3,
+                0,
+                0,
+                16
+              ],
+              "texture": "#bottom",
+              "cullface": "north"
+            },
+            "south": {
+              "uv": [
+                0,
+                0,
+                3,
+                16
+              ],
+              "texture": "#bottom",
+              "cullface": "south"
+            },
+            "west": {
+              "uv": [
+                16,
+                0,
+                0,
+                16
+              ],
+              "texture": "#bottom",
+              "cullface": "west"
+            },
+            "east": {
+              "uv": [
+                0,
+                0,
+                16,
+                16
+              ],
+              "texture": "#bottom"
+            }
+          }
+        }
+      ]
+    },
+    "door_bottom_right_open": {
+      "ambientocclusion": false,
+      "textures": {
+        "particle": "#bottom"
+      },
+      "elements": [
+        {
+          "from": [
+            0,
+            0,
+            0
+          ],
+          "to": [
+            3,
+            16,
+            16
+          ],
+          "faces": {
+            "down": {
+              "uv": [
+                16,
+                16,
+                0,
+                13
+              ],
+              "texture": "#bottom",
+              "cullface": "down",
+              "rotation": 90
+            },
+            "north": {
+              "uv": [
+                3,
+                0,
+                0,
+                16
+              ],
+              "texture": "#bottom",
+              "cullface": "north"
+            },
+            "south": {
+              "uv": [
+                3,
+                0,
+                0,
+                16
+              ],
+              "texture": "#bottom",
+              "cullface": "south"
+            },
+            "west": {
+              "uv": [
+                0,
+                0,
+                16,
+                16
+              ],
+              "texture": "#bottom",
+              "cullface": "west"
+            },
+            "east": {
+              "uv": [
+                16,
+                0,
+                0,
+                16
+              ],
+              "texture": "#bottom"
+            }
+          }
+        }
+      ]
+    },
+    "door_top_left": {
+      "ambientocclusion": false,
+      "textures": {
+        "particle": "#top"
+      },
+      "elements": [
+        {
+          "from": [
+            0,
+            0,
+            0
+          ],
+          "to": [
+            3,
+            16,
+            16
+          ],
+          "faces": {
+            "up": {
+              "uv": [
+                0,
+                3,
+                16,
+                0
+              ],
+              "texture": "#top",
+              "cullface": "up",
+              "rotation": 90
+            },
+            "north": {
+              "uv": [
+                3,
+                0,
+                0,
+                16
+              ],
+              "texture": "#top",
+              "cullface": "north"
+            },
+            "south": {
+              "uv": [
+                0,
+                0,
+                3,
+                16
+              ],
+              "texture": "#top",
+              "cullface": "south"
+            },
+            "west": {
+              "uv": [
+                0,
+                0,
+                16,
+                16
+              ],
+              "texture": "#top",
+              "cullface": "west"
+            },
+            "east": {
+              "uv": [
+                16,
+                0,
+                0,
+                16
+              ],
+              "texture": "#top"
+            }
+          }
+        }
+      ]
+    },
+    "door_top_left_open": {
+      "ambientocclusion": false,
+      "textures": {
+        "particle": "#top"
+      },
+      "elements": [
+        {
+          "from": [
+            0,
+            0,
+            0
+          ],
+          "to": [
+            3,
+            16,
+            16
+          ],
+          "faces": {
+            "up": {
+              "uv": [
+                0,
+                3,
+                16,
+                0
+              ],
+              "texture": "#top",
+              "cullface": "up",
+              "rotation": 270
+            },
+            "north": {
+              "uv": [
+                0,
+                0,
+                3,
+                16
+              ],
+              "texture": "#top",
+              "cullface": "north"
+            },
+            "south": {
+              "uv": [
+                0,
+                0,
+                3,
+                16
+              ],
+              "texture": "#top",
+              "cullface": "south"
+            },
+            "west": {
+              "uv": [
+                16,
+                0,
+                0,
+                16
+              ],
+              "texture": "#top",
+              "cullface": "west"
+            },
+            "east": {
+              "uv": [
+                0,
+                0,
+                16,
+                16
+              ],
+              "texture": "#top"
+            }
+          }
+        }
+      ]
+    },
+    "door_top_right": {
+      "ambientocclusion": false,
+      "textures": {
+        "particle": "#top"
+      },
+      "elements": [
+        {
+          "from": [
+            0,
+            0,
+            0
+          ],
+          "to": [
+            3,
+            16,
+            16
+          ],
+          "faces": {
+            "up": {
+              "uv": [
+                0,
+                0,
+                16,
+                3
+              ],
+              "texture": "#top",
+              "cullface": "up",
+              "rotation": 270
+            },
+            "north": {
+              "uv": [
+                3,
+                0,
+                0,
+                16
+              ],
+              "texture": "#top",
+              "cullface": "north"
+            },
+            "south": {
+              "uv": [
+                0,
+                0,
+                3,
+                16
+              ],
+              "texture": "#top",
+              "cullface": "south"
+            },
+            "west": {
+              "uv": [
+                16,
+                0,
+                0,
+                16
+              ],
+              "texture": "#top",
+              "cullface": "west"
+            },
+            "east": {
+              "uv": [
+                0,
+                0,
+                16,
+                16
+              ],
+              "texture": "#top"
+            }
+          }
+        }
+      ]
+    },
+    "door_top_right_open": {
+      "ambientocclusion": false,
+      "textures": {
+        "particle": "#top"
+      },
+      "elements": [
+        {
+          "from": [
+            0,
+            0,
+            0
+          ],
+          "to": [
+            3,
+            16,
+            16
+          ],
+          "faces": {
+            "up": {
+              "uv": [
+                0,
+                0,
+                16,
+                3
+              ],
+              "texture": "#top",
+              "cullface": "up",
+              "rotation": 90
+            },
+            "north": {
+              "uv": [
+                3,
+                0,
+                0,
+                16
+              ],
+              "texture": "#top",
+              "cullface": "north"
+            },
+            "south": {
+              "uv": [
+                3,
+                0,
+                0,
+                16
+              ],
+              "texture": "#top",
+              "cullface": "south"
+            },
+            "west": {
+              "uv": [
+                0,
+                0,
+                16,
+                16
+              ],
+              "texture": "#top",
+              "cullface": "west"
+            },
+            "east": {
+              "uv": [
+                16,
+                0,
+                0,
+                16
+              ],
+              "texture": "#top"
+            }
+          }
+        }
+      ]
+    },
+    "template_orientable_trapdoor_bottom": {
+      "parent": "block/thin_block",
+      "textures": {
+        "particle": "#texture"
+      },
+      "elements": [
+        {
+          "from": [
+            0,
+            0,
+            0
+          ],
+          "to": [
+            16,
+            3,
+            16
+          ],
+          "faces": {
+            "down": {
+              "uv": [
+                0,
+                0,
+                16,
+                16
+              ],
+              "texture": "#texture",
+              "cullface": "down"
+            },
+            "up": {
+              "uv": [
+                0,
+                16,
+                16,
+                0
+              ],
+              "texture": "#texture"
+            },
+            "north": {
+              "uv": [
+                0,
+                0,
+                16,
+                3
+              ],
+              "texture": "#texture",
+              "cullface": "north"
+            },
+            "south": {
+              "uv": [
+                0,
+                0,
+                16,
+                3
+              ],
+              "texture": "#texture",
+              "cullface": "south"
+            },
+            "west": {
+              "uv": [
+                0,
+                0,
+                16,
+                3
+              ],
+              "texture": "#texture",
+              "cullface": "west"
+            },
+            "east": {
+              "uv": [
+                0,
+                0,
+                16,
+                3
+              ],
+              "texture": "#texture",
+              "cullface": "east"
+            }
+          }
+        }
+      ]
+    },
+    "template_orientable_trapdoor_top": {
+      "textures": {
+        "particle": "#texture"
+      },
+      "elements": [
+        {
+          "from": [
+            0,
+            13,
+            0
+          ],
+          "to": [
+            16,
+            16,
+            16
+          ],
+          "faces": {
+            "down": {
+              "uv": [
+                0,
+                0,
+                16,
+                16
+              ],
+              "texture": "#texture"
+            },
+            "up": {
+              "uv": [
+                0,
+                16,
+                16,
+                0
+              ],
+              "texture": "#texture",
+              "cullface": "up"
+            },
+            "north": {
+              "uv": [
+                0,
+                0,
+                16,
+                3
+              ],
+              "texture": "#texture",
+              "cullface": "north"
+            },
+            "south": {
+              "uv": [
+                0,
+                0,
+                16,
+                3
+              ],
+              "texture": "#texture",
+              "cullface": "south"
+            },
+            "west": {
+              "uv": [
+                0,
+                0,
+                16,
+                3
+              ],
+              "texture": "#texture",
+              "cullface": "west"
+            },
+            "east": {
+              "uv": [
+                0,
+                0,
+                16,
+                3
+              ],
+              "texture": "#texture",
+              "cullface": "east"
+            }
+          }
+        }
+      ]
+    },
+    "template_orientable_trapdoor_open": {
+      "textures": {
+        "particle": "#texture"
+      },
+      "elements": [
+        {
+          "from": [
+            0,
+            0,
+            13
+          ],
+          "to": [
+            16,
+            16,
+            16
+          ],
+          "faces": {
+            "down": {
+              "uv": [
+                0,
+                0,
+                16,
+                3
+              ],
+              "texture": "#texture",
+              "cullface": "down"
+            },
+            "up": {
+              "uv": [
+                0,
+                3,
+                16,
+                0
+              ],
+              "texture": "#texture",
+              "cullface": "up"
+            },
+            "north": {
+              "uv": [
+                0,
+                16,
+                16,
+                0
+              ],
+              "texture": "#texture"
+            },
+            "south": {
+              "uv": [
+                0,
+                16,
+                16,
+                0
+              ],
+              "texture": "#texture",
+              "cullface": "south"
+            },
+            "west": {
+              "uv": [
+                0,
+                0,
+                16,
+                3
+              ],
+              "rotation": 90,
+              "texture": "#texture",
+              "cullface": "west"
+            },
+            "east": {
+              "uv": [
+                0,
+                3,
+                16,
+                0
+              ],
+              "rotation": 90,
+              "texture": "#texture",
+              "cullface": "east"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "states": {
+    "door": {
+      "facing=east,half=lower,hinge=left,open=false": {
+        "model": "minecraft:block/cherry_door_bottom_left"
+      },
+      "facing=east,half=lower,hinge=left,open=true": {
+        "model": "minecraft:block/cherry_door_bottom_left_open",
+        "y": 90
+      },
+      "facing=east,half=lower,hinge=right,open=false": {
+        "model": "minecraft:block/cherry_door_bottom_right"
+      },
+      "facing=east,half=lower,hinge=right,open=true": {
+        "model": "minecraft:block/cherry_door_bottom_right_open",
+        "y": 270
+      },
+      "facing=east,half=upper,hinge=left,open=false": {
+        "model": "minecraft:block/cherry_door_top_left"
+      },
+      "facing=east,half=upper,hinge=left,open=true": {
+        "model": "minecraft:block/cherry_door_top_left_open",
+        "y": 90
+      },
+      "facing=east,half=upper,hinge=right,open=false": {
+        "model": "minecraft:block/cherry_door_top_right"
+      },
+      "facing=east,half=upper,hinge=right,open=true": {
+        "model": "minecraft:block/cherry_door_top_right_open",
+        "y": 270
+      },
+      "facing=north,half=lower,hinge=left,open=false": {
+        "model": "minecraft:block/cherry_door_bottom_left",
+        "y": 270
+      },
+      "facing=north,half=lower,hinge=left,open=true": {
+        "model": "minecraft:block/cherry_door_bottom_left_open"
+      },
+      "facing=north,half=lower,hinge=right,open=false": {
+        "model": "minecraft:block/cherry_door_bottom_right",
+        "y": 270
+      },
+      "facing=north,half=lower,hinge=right,open=true": {
+        "model": "minecraft:block/cherry_door_bottom_right_open",
+        "y": 180
+      },
+      "facing=north,half=upper,hinge=left,open=false": {
+        "model": "minecraft:block/cherry_door_top_left",
+        "y": 270
+      },
+      "facing=north,half=upper,hinge=left,open=true": {
+        "model": "minecraft:block/cherry_door_top_left_open"
+      },
+      "facing=north,half=upper,hinge=right,open=false": {
+        "model": "minecraft:block/cherry_door_top_right",
+        "y": 270
+      },
+      "facing=north,half=upper,hinge=right,open=true": {
+        "model": "minecraft:block/cherry_door_top_right_open",
+        "y": 180
+      },
+      "facing=south,half=lower,hinge=left,open=false": {
+        "model": "minecraft:block/cherry_door_bottom_left",
+        "y": 90
+      },
+      "facing=south,half=lower,hinge=left,open=true": {
+        "model": "minecraft:block/cherry_door_bottom_left_open",
+        "y": 180
+      },
+      "facing=south,half=lower,hinge=right,open=false": {
+        "model": "minecraft:block/cherry_door_bottom_right",
+        "y": 90
+      },
+      "facing=south,half=lower,hinge=right,open=true": {
+        "model": "minecraft:block/cherry_door_bottom_right_open"
+      },
+      "facing=south,half=upper,hinge=left,open=false": {
+        "model": "minecraft:block/cherry_door_top_left",
+        "y": 90
+      },
+      "facing=south,half=upper,hinge=left,open=true": {
+        "model": "minecraft:block/cherry_door_top_left_open",
+        "y": 180
+      },
+      "facing=south,half=upper,hinge=right,open=false": {
+        "model": "minecraft:block/cherry_door_top_right",
+        "y": 90
+      },
+      "facing=south,half=upper,hinge=right,open=true": {
+        "model": "minecraft:block/cherry_door_top_right_open"
+      },
+      "facing=west,half=lower,hinge=left,open=false": {
+        "model": "minecraft:block/cherry_door_bottom_left",
+        "y": 180
+      },
+      "facing=west,half=lower,hinge=left,open=true": {
+        "model": "minecraft:block/cherry_door_bottom_left_open",
+        "y": 270
+      },
+      "facing=west,half=lower,hinge=right,open=false": {
+        "model": "minecraft:block/cherry_door_bottom_right",
+        "y": 180
+      },
+      "facing=west,half=lower,hinge=right,open=true": {
+        "model": "minecraft:block/cherry_door_bottom_right_open",
+        "y": 90
+      },
+      "facing=west,half=upper,hinge=left,open=false": {
+        "model": "minecraft:block/cherry_door_top_left",
+        "y": 180
+      },
+      "facing=west,half=upper,hinge=left,open=true": {
+        "model": "minecraft:block/cherry_door_top_left_open",
+        "y": 270
+      },
+      "facing=west,half=upper,hinge=right,open=false": {
+        "model": "minecraft:block/cherry_door_top_right",
+        "y": 180
+      },
+      "facing=west,half=upper,hinge=right,open=true": {
+        "model": "minecraft:block/cherry_door_top_right_open",
+        "y": 90
+      }
+    },
+    "trapdoor": {
+      "facing=east,half=bottom,open=false": {
+        "model": "minecraft:block/cherry_trapdoor_bottom",
+        "y": 90
+      },
+      "facing=east,half=bottom,open=true": {
+        "model": "minecraft:block/cherry_trapdoor_open",
+        "y": 90
+      },
+      "facing=east,half=top,open=false": {
+        "model": "minecraft:block/cherry_trapdoor_top",
+        "y": 90
+      },
+      "facing=east,half=top,open=true": {
+        "model": "minecraft:block/cherry_trapdoor_open",
+        "x": 180,
+        "y": 270
+      },
+      "facing=north,half=bottom,open=false": {
+        "model": "minecraft:block/cherry_trapdoor_bottom"
+      },
+      "facing=north,half=bottom,open=true": {
+        "model": "minecraft:block/cherry_trapdoor_open"
+      },
+      "facing=north,half=top,open=false": {
+        "model": "minecraft:block/cherry_trapdoor_top"
+      },
+      "facing=north,half=top,open=true": {
+        "model": "minecraft:block/cherry_trapdoor_open",
+        "x": 180,
+        "y": 180
+      },
+      "facing=south,half=bottom,open=false": {
+        "model": "minecraft:block/cherry_trapdoor_bottom",
+        "y": 180
+      },
+      "facing=south,half=bottom,open=true": {
+        "model": "minecraft:block/cherry_trapdoor_open",
+        "y": 180
+      },
+      "facing=south,half=top,open=false": {
+        "model": "minecraft:block/cherry_trapdoor_top",
+        "y": 180
+      },
+      "facing=south,half=top,open=true": {
+        "model": "minecraft:block/cherry_trapdoor_open",
+        "x": 180
+      },
+      "facing=west,half=bottom,open=false": {
+        "model": "minecraft:block/cherry_trapdoor_bottom",
+        "y": 270
+      },
+      "facing=west,half=bottom,open=true": {
+        "model": "minecraft:block/cherry_trapdoor_open",
+        "y": 270
+      },
+      "facing=west,half=top,open=false": {
+        "model": "minecraft:block/cherry_trapdoor_top",
+        "y": 270
+      },
+      "facing=west,half=top,open=true": {
+        "model": "minecraft:block/cherry_trapdoor_open",
+        "x": 180,
+        "y": 90
+      }
+    }
+  }
+}
