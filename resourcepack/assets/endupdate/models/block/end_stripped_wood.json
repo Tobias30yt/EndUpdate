@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stripped_mangrove_wood",
+  "textures": {
+    "side": "endupdate:block/end_stripped_log",
+    "end": "endupdate:block/end_stripped_log",
+    "particle": "endupdate:block/end_stripped_log"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "log": {
+    "path": "C:\\Users\\psche\\.codex\\generated_images\\01a12a64-c60a-75a0-af85-b140f385e668\\exec-71fcbd2b-3576-4069-aa21-e84779f0c510.png",
+    "prompt": "Minecraft vanilla resource-pack asset edit. Attached image is a 16x16 texture enlarged to1024x1024. End tree bark, vertical broken grain in muted dark purple brown #493447 #62475d #7b586f with a few muted mauve highlights. Preserve vanilla bark layout. Preserve EXACT 16x16 pixel grid and full canvas. Each pixel is one flat color square, no added pixel detail. Restrained vanilla style, no glow, no gradients, no illustration, no perspective, no border outside texture, no text. Keep opaque surfaces opaque and existing transparent space transparent."
+  },
+  "log_top": {
+    "path": "C:\\Users\\psche\\.codex\\generated_images\\01a12a64-c60a-75a0-af85-b140f385e668\\exec-35d65dae-d478-4caa-b804-f6df2d478fc8.png",
+    "prompt": "Minecraft vanilla resource-pack asset edit. Attached image is a 16x16 texture enlarged to1024x1024. End log top endgrain. Dark purple bark border #493447 #62475d around a pale dusty lilac-pink wood core #b47d9b #cf9db7 #e4bbcd. Simple square tree rings. Preserve EXACT 16x16 pixel grid and full canvas. Each pixel is one flat color square, no added pixel detail. Restrained vanilla style, no glow, no gradients, no illustration, no perspective, no border outside texture, no text. Keep opaque surfaces opaque and existing transparent space transparent."
+  },
+  "stripped_log": {
+    "path": "C:\\Users\\psche\\.codex\\generated_images\\01a12a64-c60a-75a0-af85-b140f385e668\\exec-e6dd6c21-5cf9-484f-9a7d-ae579e07fd03.png",
+    "prompt": "Minecraft vanilla resource-pack asset edit. Attached image is a 16x16 texture enlarged to1024x1024. Stripped End log side, long subtle vertical grain in dusty lilac-pink #b47d9b #cf9db7 #e4bbcd #976681. Preserve EXACT 16x16 pixel grid and full canvas. Each pixel is one flat color square, no added pixel detail. Restrained vanilla style, no glow, no gradients, no illustration, no perspective, no border outside texture, no text. Keep opaque surfaces opaque and existing transparent space transparent."
+  },
+  "stripped_log_top": {
+    "path": "C:\\Users\\psche\\.codex\\generated_images\\01a12a64-c60a-75a0-af85-b140f385e668\\exec-63677bba-d061-4f05-ba70-d2b439ccaf56.png",
+    "prompt": "Minecraft vanilla resource-pack asset edit. Attached image is a 16x16 texture enlarged to1024x1024. Stripped End log endgrain. Soft concentric square wood rings in dusty lilac-pink #b47d9b #cf9db7 #e4bbcd #976681. No bark border. Preserve EXACT 16x16 pixel grid and full canvas. Each pixel is one flat color square, no added pixel detail. Restrained vanilla style, no glow, no gradients, no illustration, no perspective, no border outside texture, no text. Keep opaque surfaces opaque and existing transparent space transparent."
+  },
+  "planks": {
+    "path": "C:\\Users\\psche\\.codex\\generated_images\\01a12a64-c60a-75a0-af85-b140f385e668\\exec-d0fd6180-632b-4859-95ce-94ce6fc051d7.png",
+    "prompt": "Minecraft vanilla resource-pack asset edit. Attached image is a 16x16 texture enlarged to1024x1024. End wood planks. Four horizontal plank courses with staggered short joints. Muted dusty lilac-pink #b47d9b #cf9db7 #e4bbcd, shadow joints #976681. Vanilla subtle wood grain. Preserve EXACT 16x16 pixel grid and full canvas. Each pixel is one flat color square, no added pixel detail. Restrained vanilla style, no glow, no gradients, no illustration, no perspective, no border outside texture, no text. Keep opaque surfaces opaque and existing transparent space transparent."
+  },
+  "leaves": {
+    "path": "C:\\Users\\psche\\.codex\\generated_images\\01a12a64-c60a-75a0-af85-b140f385e668\\exec-7a9b52e5-b2d0-44d1-a6eb-776760aada24.png",
+    "prompt": "Minecraft vanilla resource-pack asset edit. Attached image is a 16x16 texture enlarged to1024x1024. Pink End tree leaves, clustered pink foliage #d782b4 #eaa7cf #f3c8df, dark muted purple leaf clusters #a76599; replace all green with mauve, preserve scattered transparent gaps. Simple vanilla leafy pixel clusters. Preserve EXACT 16x16 pixel grid and full canvas. Each pixel is one flat color square, no added pixel detail. Restrained vanilla style, no glow, no gradients, no illustration, no perspective, no border outside texture, no text. Keep opaque surfaces opaque and existing transparent space transparent."
+  },
+  "sapling": {
+    "path": "C:\\Users\\psche\\.codex\\generated_images\\01a12a64-c60a-75a0-af85-b140f385e668\\exec-d390c9f9-93fc-4360-a39b-3203586369dc.png",
+    "prompt": "Minecraft vanilla resource-pack asset edit. Attached image is a 16x16 texture enlarged to1024x1024. Tiny End tree sapling sprite, dark purple brown stem and fork #493447 #62475d with three small dusty pink leaf clusters #d782b4 #eaa7cf #f3c8df. Preserve vanilla sapling silhouette and transparency. Preserve EXACT 16x16 pixel grid and full canvas. Each pixel is one flat color square, no added pixel detail. Restrained vanilla style, no glow, no gradients, no illustration, no perspective, no border outside texture, no text. Keep opaque surfaces opaque and existing transparent space transparent."
+  },
+  "trapdoor": {
+    "path": "C:\\Users\\psche\\.codex\\generated_images\\01a12a64-c60a-75a0-af85-b140f385e668\\exec-8fd850da-a88f-49a0-88ee-6082c2b0a6d9.png",
+    "prompt": "Minecraft vanilla resource-pack asset edit. Attached image is a 16x16 texture enlarged to1024x1024. End wood trapdoor, dusty lilac-pink #b47d9b #cf9db7 #e4bbcd with muted purple details #976681. Preserve the vanilla framed simple panel pattern and any transparent openings. Preserve EXACT 16x16 pixel grid and full canvas. Each pixel is one flat color square, no added pixel detail. Restrained vanilla style, no glow, no gradients, no illustration, no perspective, no border outside texture, no text. Keep opaque surfaces opaque and existing transparent space transparent."
+  },
+  "door_bottom": {
+    "path": "C:\\Users\\psche\\.codex\\generated_images\\01a12a64-c60a-75a0-af85-b140f385e668\\exec-4359bfb1-e564-4ba5-ac96-13326257245a.png",
+    "prompt": "Minecraft vanilla resource-pack asset edit. Attached image is a 16x16 texture enlarged to1024x1024. Bottom half of End wood door, recolor the attached vanilla cherry door BOTTOM texture to muted dusty lilac-pink #b47d9b #cf9db7 #e4bbcd #976681. Preserve all layout and simple grain. Preserve EXACT 16x16 pixel grid and full canvas. Each pixel is one flat color square, no added pixel detail. Restrained vanilla style, no glow, no gradients, no illustration, no perspective, no border outside texture, no text. Keep opaque surfaces opaque and existing transparent space transparent."
+  },
+  "door_top": {
+    "path": "C:\\Users\\psche\\.codex\\generated_images\\01a12a64-c60a-75a0-af85-b140f385e668\\exec-6a3ace84-d63f-4dad-8df1-8cfb5a19db48.png",
+    "prompt": "Minecraft vanilla resource-pack asset edit. Attached image is a 16x16 texture enlarged to1024x1024. Top half of End wood door, recolor the attached vanilla cherry door TOP texture to muted dusty lilac-pink #b47d9b #cf9db7 #e4bbcd #976681. Preserve all layout and simple grain. Preserve EXACT 16x16 pixel grid and full canvas. Each pixel is one flat color square, no added pixel detail. Restrained vanilla style, no glow, no gradients, no illustration, no perspective, no border outside texture, no text. Keep opaque surfaces opaque and existing transparent space transparent. The dark openings in the upper door panel MUST be actual transparent cutouts, not painted black. Transparent background in those openings only, wood remains opaque."
+  },
+  "door_item": {
+    "path": "C:\\Users\\psche\\.codex\\generated_images\\01a12a64-c60a-75a0-af85-b140f385e668\\exec-45d046e7-482b-4c1f-8852-da28950056b3.png",
+    "prompt": "Minecraft vanilla resource-pack asset edit. Attached image is a 16x16 texture enlarged to1024x1024. End wood door inventory sprite. Recolor attached vanilla cherry door inventory icon to muted dusty lilac-pink #b47d9b #cf9db7 #e4bbcd #976681. Preserve silhouette, handle and transparency. Preserve EXACT 16x16 pixel grid and full canvas. Each pixel is one flat color square, no added pixel detail. Restrained vanilla style, no glow, no gradients, no illustration, no perspective, no border outside texture, no text. Keep opaque surfaces opaque and existing transparent space transparent."
+  }
+}

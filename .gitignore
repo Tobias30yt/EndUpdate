@@ -4,3 +4,4 @@ target/
 *.log
 *.jar
 .idea/
+__pycache__/

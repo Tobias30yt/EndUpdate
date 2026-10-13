@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/template_trapdoor",
+  "textures": {
+    "bottom": "endupdate:block/end_trapdoor",
+    "top": "endupdate:block/end_trapdoor",
+    "particle": "endupdate:block/end_trapdoor"
+  }
+}

@@ -12,5 +12,5 @@ $env:JAVA_HOME = $JavaHome
 $env:PATH = "$JavaHome\bin;$env:PATH"
 mvn -B -ntp '-Dmaven.repo.local=.tools/m2' package
 if ($LASTEXITCODE -ne 0) { throw 'Build fehlgeschlagen.' }
-Copy-Item -LiteralPath 'target/EndUpdate-1.0.1.jar' -Destination 'EndUpdate-1.0.1.jar'
-Write-Output 'Fertig: EndUpdate-1.0.1.jar'
+Copy-Item -LiteralPath 'target/EndUpdate-1.0.2.jar' -Destination 'EndUpdate-1.0.2.jar'
+Write-Output 'Fertig: EndUpdate-1.0.2.jar'

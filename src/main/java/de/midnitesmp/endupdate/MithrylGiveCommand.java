@@ -55,8 +55,11 @@ public final class MithrylGiveCommand implements TabExecutor {
     }
 
     private List<String> itemNames() {
-        List<String> names = new ArrayList<>(List.of("ingot", "shard", "template", "block"));
+        List<String> names = new ArrayList<>(List.of("ingot", "shard", "template", "block", "ore"));
+        names.addAll(MithrylItems.RELICS);
+        names.addAll(MithrylWorkstations.MATERIALS.keySet());
         names.addAll(MithrylItems.GEAR.keySet());
+        names.addAll(EndWood.MATERIALS.keySet());
         return names;
     }
 

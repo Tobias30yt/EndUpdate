@@ -12,11 +12,22 @@ import java.util.*;
 public final class EndUpdatePlugin extends JavaPlugin implements Listener, TabExecutor {
     private MithrylItems items; private MithrylRecipes recipes; private MithrylSpeed speed; private ResourcePackHost pack;
     private MithrylGiveCommand give;
+    private MithrylTraders traders;
     public NamespacedKey key(String name){return new NamespacedKey(this,name);}
     @Override public void onEnable(){
         saveDefaultConfig();items=new MithrylItems(this);recipes=new MithrylRecipes(this,items);recipes.register();
-        speed=new MithrylSpeed(this,items);MithrylOre ore=new MithrylOre(this,items);pack=new ResourcePackHost(this);
-        for(Listener listener:List.of(this,recipes,speed,ore,pack,new EndCityLoot(this,items),new MithrylBlocks(this,items)))getServer().getPluginManager().registerEvents(listener,this);
+        speed=new MithrylSpeed(this,items);CustomBlockDisplays displays=new CustomBlockDisplays(this,items);
+        MithrylOre ore=new MithrylOre(this,items,displays);MithrylBlocks storage=new MithrylBlocks(this,items,displays);pack=new ResourcePackHost(this);
+        EndWood wood=new EndWood(this,items,displays);EndVillages villages=new EndVillages(this,items,wood);
+        MithrylWorkstations stations=new MithrylWorkstations(this,items,displays);
+        traders=new MithrylTraders(this,items,stations);villages.setTraders(traders);
+        for(Listener listener:List.of(this,recipes,speed,ore,pack,wood,villages,displays,new EndCityLoot(this,items),storage,stations,traders,new MithrylRelics(this,items,wood)))getServer().getPluginManager().registerEvents(listener,this);
+        Objects.requireNonNull(getCommand("locatevillage")).setExecutor(villages);
+        Bukkit.getWorlds().forEach(w->Arrays.stream(w.getLoadedChunks()).forEach(c->{
+            var loaded=new org.bukkit.event.world.ChunkLoadEvent(c,false);
+            wood.load(loaded);ore.load(loaded);storage.load(loaded);traders.load(c);
+            if(getConfig().getBoolean("villages.generate-in-existing-chunks",false))villages.enqueue(c);
+        }));
         try{pack.start();}catch(Exception ex){pack.close();getLogger().log(java.util.logging.Level.SEVERE,"Cannot host resource pack. Gameplay remains enabled.",ex);}
         Objects.requireNonNull(getCommand("speed")).setExecutor(this);
         Objects.requireNonNull(getCommand("endupdate")).setExecutor(this);
@@ -28,7 +39,7 @@ public final class EndUpdatePlugin extends JavaPlugin implements Listener, TabEx
         Bukkit.getOnlinePlayers().forEach(p->{p.discoverRecipes(recipes.keys());if(pack.ready())pack.offer(p);});
         getLogger().info("EndUpdate enabled: 9 Mithryl upgrades, End City loot, surface ore and resource pack.");
     }
-    @Override public void onDisable(){if(speed!=null)Bukkit.getOnlinePlayers().forEach(speed::clear);if(pack!=null)pack.close();if(recipes!=null)recipes.unregister();}
+    @Override public void onDisable(){if(traders!=null)traders.shutdown();if(speed!=null)Bukkit.getOnlinePlayers().forEach(speed::clear);if(pack!=null)pack.close();if(recipes!=null)recipes.unregister();}
     @EventHandler public void join(PlayerJoinEvent e){e.getPlayer().discoverRecipes(recipes.keys());}
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -97,7 +108,7 @@ public final class EndUpdatePlugin extends JavaPlugin implements Listener, TabEx
         else if(args.length==1){choices.addAll(List.of("pack","status","help"));if(sender.hasPermission("endupdate.admin"))choices.add("give");}
         else if(args[0].equalsIgnoreCase("give")&&sender.hasPermission("endupdate.admin")){
             if(args.length==2)Bukkit.getOnlinePlayers().forEach(p->choices.add(p.getName()));
-            else if(args.length==3){choices.addAll(List.of("shard","ingot","template","block"));choices.addAll(MithrylItems.GEAR.keySet());}
+            else if(args.length==3){choices.addAll(List.of("shard","ingot","template","block","ore"));choices.addAll(MithrylItems.GEAR.keySet());choices.addAll(EndWood.MATERIALS.keySet());choices.addAll(MithrylItems.RELICS);choices.addAll(MithrylWorkstations.MATERIALS.keySet());}
             else if(args.length==4)choices.addAll(List.of("1","4","16","64"));
         }
         String prefix=args.length==0?"":args[args.length-1].toLowerCase(Locale.ROOT);

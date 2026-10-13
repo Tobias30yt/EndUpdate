@@ -2,7 +2,7 @@ $ErrorActionPreference = 'Stop'
 $javaBin = Join-Path $env:JAVA_HOME 'bin'
 $root = Split-Path $PSScriptRoot -Parent
 Set-Location $root
-$cp = (Get-Content '.tools/classpath.txt' -Raw).Trim() + ';' + (Join-Path $root 'target/EndUpdate-1.0.1.jar')
+$cp = (Get-Content '.tools/classpath.txt' -Raw).Trim() + ';' + (Join-Path $root 'target/EndUpdate-1.0.2.jar')
 New-Item -ItemType Directory -Force '.tools/probe' | Out-Null
 & "$javaBin/javac.exe" --release 25 -cp $cp -d '.tools/probe' 'tools/integration/VerificationPlugin.java'
 if ($LASTEXITCODE -ne 0) { throw 'Probe compilation failed' }

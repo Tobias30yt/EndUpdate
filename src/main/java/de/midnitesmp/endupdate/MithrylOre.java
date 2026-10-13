@@ -13,13 +13,15 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public final class MithrylOre implements Listener {
+    public static final Material ORE_BLOCK = Material.PRISMARINE;
     private final EndUpdatePlugin plugin;
     private final MithrylItems items;
+    private final CustomBlockDisplays displays;
     private final NamespacedKey generated, locations;
     private record Pending(World world, int x, int z) {}
     private final Set<Pending> queue = new LinkedHashSet<>();
-    public MithrylOre(EndUpdatePlugin plugin, MithrylItems items) {
-        this.plugin = plugin; this.items = items; generated = plugin.key("ore_generated_v1"); locations = plugin.key("ore_locations");
+    public MithrylOre(EndUpdatePlugin plugin, MithrylItems items, CustomBlockDisplays displays) {
+        this.plugin = plugin; this.items = items; this.displays = displays; generated = plugin.key("ore_generated_v1"); locations = plugin.key("ore_locations");
         Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             for (int i=0; i<2 && !queue.isEmpty(); i++) {
                 var it = queue.iterator(); Pending p = it.next(); it.remove();
@@ -31,7 +33,18 @@ public final class MithrylOre implements Listener {
         if (chunk.getWorld().getEnvironment() == World.Environment.THE_END && !chunk.getPersistentDataContainer().has(generated))
             queue.add(new Pending(chunk.getWorld(), chunk.getX(), chunk.getZ()));
     }
-    @EventHandler public void load(ChunkLoadEvent e) { if (e.isNewChunk() || plugin.getConfig().getBoolean("ore.generate-in-existing-chunks", true)) enqueue(e.getChunk()); }
+    @EventHandler public void load(ChunkLoadEvent e) {
+        var pdc = e.getChunk().getPersistentDataContainer();
+        int[] savedLocations = pdc.get(locations, PersistentDataType.INTEGER_ARRAY);
+        if (savedLocations != null) {
+            for (int encoded : savedLocations) {
+                Block block = e.getChunk().getBlock(encoded & 15,
+                    (encoded >> 8) + e.getWorld().getMinHeight(), (encoded >> 4) & 15);
+                if (block.getType() == ORE_BLOCK) displays.restore(block, "ore");
+            }
+        }
+        if (e.isNewChunk() || plugin.getConfig().getBoolean("ore.generate-in-existing-chunks", true)) enqueue(e.getChunk());
+    }
     private void generate(Chunk chunk) {
         var pdc = chunk.getPersistentDataContainer(); if (pdc.has(generated)) return;
         pdc.set(generated, PersistentDataType.BYTE, (byte)1);
@@ -47,19 +60,20 @@ public final class MithrylOre implements Listener {
             if (y < world.getMinHeight() || y >= world.getMaxHeight()-1) continue;
             Block block = world.getBlockAt(x,y,z);
             if (block.getType() != Material.END_STONE || !block.getRelative(BlockFace.UP).getType().isAir()) continue;
-            block.setType(Material.PRISMARINE, false); found.add(encode(block));
+            block.setType(ORE_BLOCK, false); displays.show(block, "ore", items.create("ore")); found.add(encode(block));
         }
         pdc.set(locations, PersistentDataType.INTEGER_ARRAY, found.stream().mapToInt(Integer::intValue).toArray());
     }
     private int encode(Block b) { return MithrylRules.encode(b.getX(),b.getY(),b.getZ(),b.getWorld().getMinHeight()); }
     public boolean isOre(Block block) {
-        if (block.getType() != Material.PRISMARINE || block.getWorld().getEnvironment() != World.Environment.THE_END) return false;
+        if (block.getType() != ORE_BLOCK || block.getWorld().getEnvironment() != World.Environment.THE_END) return false;
         int[] entries = block.getChunk().getPersistentDataContainer().get(locations,PersistentDataType.INTEGER_ARRAY);
         return entries != null && Arrays.stream(entries).anyMatch(v -> v == encode(block));
     }
     private void forget(Block b) {
         var pdc=b.getChunk().getPersistentDataContainer(); int[] entries=pdc.get(locations,PersistentDataType.INTEGER_ARRAY);
         if(entries!=null) pdc.set(locations,PersistentDataType.INTEGER_ARRAY,Arrays.stream(entries).filter(v -> v!=encode(b)).toArray());
+        displays.remove(b);
     }
     @EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
     public void breakOre(BlockBreakEvent e) {

@@ -1,4 +1,12 @@
 # EndUpdate / Paper 26.3. Standardwerte funktionieren ohne Plugin-Konfiguration.
+villages:
+  enabled: true
+  spacing-chunks: 16
+  generate-in-existing-chunks: false
+  locate-region-radius: 6
+trees:
+  enabled: true
+  chunk-chance: 0.22
 ore:
   outer-island-radius: 1024
   chunk-chance: 0.32

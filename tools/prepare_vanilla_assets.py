@@ -20,13 +20,16 @@ for name, data in manifest.items():
     if name in ('ore', 'block'):
         small = img.convert('RGB').resize((16, 16), Image.Resampling.NEAREST)
         dest = ASSETS / f'textures/block/mithryl_{name}.png'
-        base = 'prismarine' if name == 'ore' else 'prismarine_bricks'
-        small.save(PACK / f'assets/minecraft/textures/block/{base}.png')
+        base = 'mossy_stone_bricks' if name == 'ore' else 'polished_blackstone_bricks'
+        (PACK / f'assets/minecraft/textures/block/{base}.png').unlink(missing_ok=True)
+        (PACK / f'assets/minecraft/textures/block/prismarine.png').unlink(missing_ok=True)
+        (PACK / f'assets/minecraft/textures/block/prismarine_bricks.png').unlink(missing_ok=True)
+        (PACK / f'assets/minecraft/textures/block/prismarine.png.mcmeta').unlink(missing_ok=True)
         blocks.append((name, small))
     elif name.startswith('rib_'):
-        small = img.resize((64, 32), Image.Resampling.NEAREST)
-        dest = PACK / f'assets/minecraft/textures/trims/entity/{name[4:]}/rib.png'
-        layers.append((name, small))
+        # Keep ordinary Rib trims intact. Custom armour uses its own equipment model.
+        (PACK / f'assets/minecraft/textures/trims/entity/{name[4:]}/rib.png').unlink(missing_ok=True)
+        continue
     elif name.startswith('humanoid'):
         small = img.resize((64, 32), Image.Resampling.NEAREST)
         dest = ASSETS / f'textures/entity/equipment/{name}/mithryl.png'

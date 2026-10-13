@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "endupdate:block/end_planks",
+    "top": "endupdate:block/end_planks",
+    "side": "endupdate:block/end_planks",
+    "particle": "endupdate:block/end_planks"
+  }
+}

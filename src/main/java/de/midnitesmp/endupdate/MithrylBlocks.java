@@ -6,17 +6,23 @@ import org.bukkit.block.Block;
 import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.persistence.PersistentDataType;
 import java.util.Arrays;
 
-/** Tracks storage blocks separately from naturally generated ore and ordinary prismarine. */
+/** Tracks storage blocks separately from ordinary prismarine bricks. */
 public final class MithrylBlocks implements Listener {
+    public static final Material STORAGE_BLOCK = Material.PRISMARINE_BRICKS;
+    private final EndUpdatePlugin plugin;
     private final NamespacedKey locations;
     private final MithrylItems items;
+    private final CustomBlockDisplays displays;
 
-    public MithrylBlocks(EndUpdatePlugin plugin, MithrylItems items) {
+    public MithrylBlocks(EndUpdatePlugin plugin, MithrylItems items, CustomBlockDisplays displays) {
+        this.plugin = plugin;
         locations = plugin.key("storage_blocks");
         this.items = items;
+        this.displays = displays;
     }
 
     private int encode(Block block) {
@@ -28,27 +34,44 @@ public final class MithrylBlocks implements Listener {
             .getOrDefault(locations, PersistentDataType.INTEGER_ARRAY, new int[0]);
     }
 
+    @EventHandler
+    public void load(ChunkLoadEvent event) {
+        for (int encoded : event.getChunk().getPersistentDataContainer()
+                .getOrDefault(locations, PersistentDataType.INTEGER_ARRAY, new int[0])) {
+            Block block = event.getChunk().getBlock(encoded & 15,
+                (encoded >> 8) + event.getWorld().getMinHeight(), (encoded >> 4) & 15);
+            if (block.getType() == STORAGE_BLOCK) displays.restore(block, "block");
+        }
+    }
+
     public boolean isStorage(Block block) {
-        return block.getType() == Material.PRISMARINE_BRICKS
+        return block.getType() == STORAGE_BLOCK
             && Arrays.stream(locations(block)).anyMatch(value -> value == encode(block));
     }
 
     private void forget(Block block) {
         int[] values = locations(block);
-        if (values.length == 0) return;
-        block.getChunk().getPersistentDataContainer().set(locations, PersistentDataType.INTEGER_ARRAY,
-            Arrays.stream(values).filter(value -> value != encode(block)).toArray());
+        if (values.length != 0) {
+            block.getChunk().getPersistentDataContainer().set(locations, PersistentDataType.INTEGER_ARRAY,
+                Arrays.stream(values).filter(value -> value != encode(block)).toArray());
+        }
+        displays.remove(block);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void place(BlockPlaceEvent event) {
         Block block = event.getBlockPlaced();
+        boolean customBlock = block.getType() == STORAGE_BLOCK && items.is(event.getItemInHand(), "block");
         forget(block);
-        if (block.getType() != Material.PRISMARINE_BRICKS || !items.is(event.getItemInHand(), "block")) return;
-        int[] values = locations(block);
-        int[] extended = Arrays.copyOf(values, values.length + 1);
-        extended[values.length] = encode(block);
-        block.getChunk().getPersistentDataContainer().set(locations, PersistentDataType.INTEGER_ARRAY, extended);
+        if (!customBlock) return;
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            if (block.getType() != STORAGE_BLOCK) return;
+            int[] values = locations(block);
+            int[] extended = Arrays.copyOf(values, values.length + 1);
+            extended[values.length] = encode(block);
+            block.getChunk().getPersistentDataContainer().set(locations, PersistentDataType.INTEGER_ARRAY, extended);
+            displays.show(block, "block", items.create("block"));
+        });
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

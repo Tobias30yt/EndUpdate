@@ -44,7 +44,7 @@ Palette edit of the attached enlarged 16x16 vanilla prismarine crystals. Preserv
 
 ## ingot
 
-Palette edit of the attached enlarged 16x16 vanilla prismarine shard sprite, used as a Mithryl ingot. Preserve the exact shard silhouette and every pixel position. Recolor to restrained Mithryl silver-teal: #33494d outline, #4c666b dark, #77989b mid, #aec9c9 light, #d7e5e2 highlight. Keep the original simple internal planes. Each source pixel is one solid flat square. NO gradients, glow, mist, antialiasing, gems, decorations, additional detail, shadows outside shapes, background or text. Stay strictly vanilla Minecraft in style and source pixel density. Preserve full canvas borders, no cropping.
+Minecraft vanilla-style production pixel texture. Strict square pixel grid, flat limited colors, no antialiasing, no gradients, no rendered object, no lettering, no watermark. A single 16x16 inventory icon enlarged to 1024x1024. Edit reference: keep ONLY its muted silvery teal palette (#33494d #4c666b #77989b #aec9c9 #d7e5e2). Replace shard shape completely with vanilla iron ingot silhouette: squat horizontal beveled rectangular metal bar, angled top plane, bright top-left face and darker front lower edge. Center with 2 pixels transparent margin. True transparent background.
 
 ## template
 

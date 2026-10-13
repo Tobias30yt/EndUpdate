@@ -1,2 +1,3 @@
-Embedded pack matches source files. JAR SHA256: 17af0a2ff59e7525e27708b04b6a7014b73ed698bd6820d123e506e39e844dc7
+41 model sprite atlases verified (no missing entity sprites or mixed atlases).
+Embedded pack matches source files. JAR SHA256: 926cea33a7c7073e463312e7a70a1da191794bac0f56afd02bd3a91ae40685ec
 Pack references, PNGs, transparency and format 97.1 verified.

@@ -1,0 +1,34 @@
+<!doctype html><html lang="de"><meta charset="utf-8"><title>EndUpdate · End-Dorf</title>
+<style>body{margin:0;background:#17121e;color:#eed9ed;font:15px system-ui}header{padding:24px 32px 10px;display:flex;align-items:center;justify-content:space-between}h1{margin:0;font-size:24px}p{color:#b8a5bb;margin:7px 0}button{border:1px solid #735873;background:#37243e;color:#f3dced;padding:9px 14px;border-radius:7px;cursor:pointer}canvas{display:block;width:100%;height:760px}footer{padding:0 32px 20px;color:#b8a5bb}</style>
+<header><div><h1>End-Dorf · Rosa Haine</h1><p>Vier Häuser, Mithryl-Kisten und ein offener End-Schrein.</p></div><button id="rotate">Ansicht drehen ↻</button></header>
+<canvas id="view" width="1280" height="760"></canvas><footer>Strukturvorschau aus echten Testserver-Blöcken · vereinfachte Blockgeometrie, kein Ingame-Screenshot</footer>
+<script>
+const blocks=__BLOCKS__, sources=__TEXTURES__, images={};let angle=0;
+const canvas=document.getElementById('view'),ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;
+function rotate(x,z){for(let i=0;i<angle;i++){let t=x;x=-z;z=t;}return [x,z];}
+function point(x,y,z){let [rx,rz]=rotate(x,z);return [640+(rx-rz)*15,385+(rx+rz)*7.5-y*15];}
+function face(corners,texture,color,shade){let points=corners.map(v=>point(...v));ctx.save();ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.closePath();ctx.clip();
+ if(images[texture]){let [a,b,,d]=points;ctx.setTransform((b[0]-a[0])/16,(b[1]-a[1])/16,(d[0]-a[0])/16,(d[1]-a[1])/16,a[0],a[1]);ctx.drawImage(images[texture],0,0,16,16);ctx.setTransform(1,0,0,1,0,0);}else{ctx.fillStyle=color;ctx.fill();}
+ ctx.fillStyle=`rgba(0,0,0,${shade})`;ctx.fill();ctx.restore();}
+function render(){ctx.clearRect(0,0,1280,760);let sorted=[...blocks].sort((a,b)=>{let ar=rotate(a[0],a[2]),br=rotate(b[0],b[2]);return ar[0]+ar[1]-br[0]-br[1]||(a[1]-b[1]);});
+ for(let [x,y,z,mat,states]of sorted){let w=1,h=1,d=1,ox=0,oz=0;let texture=mat,color='#a08ba7',top=texture;
+  if(mat.includes('slab'))h=.5;
+  if(mat.includes('fence')){w=d=.25;ox=oz=.375;texture='cherry_planks';}
+  if(mat==='end_rod'){w=d=.18;ox=oz=.41;color='#e4e4c5';}
+  if(mat==='amethyst_cluster'){w=d=.6;h=.8;ox=oz=.2;color='#b38ddb';}
+  if(mat.includes('door')){d=.18;texture=states.includes('half=upper')?'cherry_door_top':'cherry_door_bottom';}
+  if(mat==='cherry_stairs'){h=.65;texture='cherry_planks';}
+  if(mat==='cherry_slab')texture='cherry_planks';
+  if(mat==='cherry_wood')texture='cherry_log';
+  if(mat==='stripped_cherry_wood')texture='stripped_cherry_log';
+  top=texture;if(mat.endsWith('log'))top=mat+'_top';
+  if(mat==='end_stone')color='#d4d29c';if(mat==='purpur_block')color='#a77cad';if(mat==='end_stone_bricks')color='#c4c293';if(mat.includes('quartz'))color='#d9d1bd';if(mat==='chest')color='#9c6a3a';if(mat==='crafting_table')color='#865f3f';if(mat.includes('glass'))color='#684475';
+  x+=ox;z+=oz;
+  // Select the two front faces for the current quarter-turn camera.
+  let faces=[[[x,y,z+d],[x+w,y,z+d],[x+w,y+h,z+d],[x,y+h,z+d]],[[x+w,y,z],[x+w,y,z+d],[x+w,y+h,z+d],[x+w,y+h,z]],[[x+w,y,z],[x,y,z],[x,y+h,z],[x+w,y+h,z]],[[x,y,z+d],[x,y,z],[x,y+h,z],[x,y+h,z+d]]];
+  face(faces[(4-angle)%4],texture,color,.18);face(faces[(5-angle)%4],texture,color,.32);
+  face([[x,y+h,z],[x+w,y+h,z],[x+w,y+h,z+d],[x,y+h,z+d]],top,color,0);
+ }}
+Promise.all(Object.entries(sources).map(([key,src])=>new Promise(resolve=>{let img=new Image();img.onload=()=>{images[key]=img;resolve();};img.src=src;}))).then(render);
+document.getElementById('rotate').onclick=()=>{angle=(angle+1)%4;render();};
+</script></html>

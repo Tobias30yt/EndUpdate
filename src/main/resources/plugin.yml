@@ -1,10 +1,14 @@
 name: EndUpdate
-version: 1.0.1
+version: 1.0.2
 main: de.midnitesmp.endupdate.EndUpdatePlugin
 api-version: '26.3'
 description: Mithryl, neue End-City-Schaetze und ein integriertes Ressourcenpaket.
 author: MidniteSMP
 commands:
+  locatevillage:
+    description: Findet ein erzeugtes End-Dorf (nur Operatoren, im End).
+    usage: /locatevillage
+    permission: endupdate.locatevillage
   mithryl:
     description: Gibt einem Spieler Mithryl-Ingots oder andere Mithryl-Gegenstaende.
     usage: /mithryl give <player> [item] [amount]
@@ -18,6 +22,8 @@ commands:
     description: Mithryl-Hilfe und Admin-Werkzeuge.
     usage: /endupdate [give <player> <item> [amount]|pack|status|help]
 permissions:
+  endupdate.locatevillage:
+    default: op
   endupdate.speed:
     default: true
   endupdate.admin:

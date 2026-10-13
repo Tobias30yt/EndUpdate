@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "endupdate:block/grove_bench",
+    "top": "endupdate:block/end_planks",
+    "bottom": "endupdate:block/end_planks"
+  }
+}

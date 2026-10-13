@@ -24,9 +24,26 @@ public final class VerificationPlugin extends JavaPlugin {
     int assertions;
     void check(boolean value,String message){assertions++;if(!value)throw new AssertionError(message);}
     @Override public void onEnable(){Bukkit.getScheduler().runTaskLater(this,()->{
-        try{runChecks();String result="PASS: "+assertions+" integration assertions on Paper "+Bukkit.getMinecraftVersion();getLogger().info(result);Files.writeString(Path.of("integration-result.txt"),result);}
+        try{runChecks();}
         catch(Throwable ex){getLogger().log(java.util.logging.Level.SEVERE,"INTEGRATION FAILED",ex);try{Files.writeString(Path.of("integration-result.txt"),"FAIL: "+ex);}catch(Exception ignored){}}
     },30);}
+    void naturalChecks(int attempt) {
+        EndUpdatePlugin plugin=(EndUpdatePlugin)Bukkit.getPluginManager().getPlugin("EndUpdate");
+        World end=Bukkit.getWorlds().stream().filter(w->w.getEnvironment()==World.Environment.THE_END).findFirst().orElseThrow();
+        EndVillages villages=(EndVillages)Bukkit.getPluginCommand("locatevillage").getExecutor();
+        if(attempt>=49){try{Files.writeString(Path.of("integration-result.txt"),"FAIL: no natural village in 49 candidate regions");}catch(Exception ignored){}getLogger().severe("No natural village in 49 candidate regions");return;}
+        var c=EndVillages.candidate(end.getSeed(),17+attempt%7,17+attempt/7,16);
+        villages.ensure(end,c).whenComplete((location,error)->{
+            try{
+                if(error!=null)throw new AssertionError("async village generation",error);
+                if(location==null){Bukkit.getScheduler().runTaskLater(this,()->naturalChecks(attempt+1),2);return;}
+                check(location.getWorld()==end,"asynchronous generation succeeds on unmodified natural End terrain");
+                check(villages.nearest(location).getBlockX()==location.getBlockX(),"natural village appears in locate index");
+                Files.writeString(Path.of("natural-village.txt"),"Natural End village: "+location.getBlockX()+" "+location.getBlockY()+" "+location.getBlockZ()+" after "+(attempt+1)+" candidates");
+                String result="PASS: "+assertions+" integration assertions on Paper "+Bukkit.getMinecraftVersion();getLogger().info(result);Files.writeString(Path.of("integration-result.txt"),result);
+            }catch(Throwable ex){getLogger().log(java.util.logging.Level.SEVERE,"NATURAL GENERATION FAILED",ex);try{Files.writeString(Path.of("integration-result.txt"),"FAIL: "+ex);}catch(Exception ignored){}}
+        });
+    }
     @SuppressWarnings("unchecked")
     static <T> T proxy(Class<T> type,InvocationHandler handler){return (T)Proxy.newProxyInstance(type.getClassLoader(),new Class[]{type},handler);}
     void runChecks() throws Exception {
@@ -99,11 +116,19 @@ public final class VerificationPlugin extends JavaPlugin {
         Chunk chunk=end.getChunkAt(128,128);chunk.getPersistentDataContainer().remove(plugin.key("ore_generated_v1"));
         for(int x=0;x<16;x++)for(int z=0;z<16;z++)end.getBlockAt(2048+x,100,2048+z).setType(Material.END_STONE,false);
         plugin.getConfig().set("ore.chunk-chance",1.0);plugin.getConfig().set("ore.attempts-per-chunk",64);
-        MithrylOre ore=new MithrylOre(plugin,items);Method generate=MithrylOre.class.getDeclaredMethod("generate",Chunk.class);generate.setAccessible(true);generate.invoke(ore,chunk);
+        CustomBlockDisplays displays=new CustomBlockDisplays(plugin,items);
+        MithrylOre ore=new MithrylOre(plugin,items,displays);Method generate=MithrylOre.class.getDeclaredMethod("generate",Chunk.class);generate.setAccessible(true);generate.invoke(ore,chunk);
         List<Block> ores=new ArrayList<>();for(int x=0;x<16;x++)for(int z=0;z<16;z++){Block b=end.getBlockAt(2048+x,100,2048+z);if(ore.isOre(b))ores.add(b);}
         check(!ores.isEmpty(),"outer surface ores generated");
+        check(!displays.hasDisplay(ores.getFirst()),"ore display is culled with no player in range");
         int[] before=chunk.getPersistentDataContainer().get(plugin.key("ore_locations"),PersistentDataType.INTEGER_ARRAY);generate.invoke(ore,chunk);check(Arrays.equals(before,chunk.getPersistentDataContainer().get(plugin.key("ore_locations"),PersistentDataType.INTEGER_ARRAY)),"generation idempotent");
-        Block placed=end.getBlockAt(2048,101,2048);placed.setType(Material.PRISMARINE,false);check(!ore.isOre(placed),"placed prismarine not ore");
+        Block placed=end.getBlockAt(2048,101,2048);placed.setType(Material.PRISMARINE,false);check(!ore.isOre(placed),"ordinary prismarine not ore");
+        Block oldOre=end.getBlockAt(2049,101,2048);oldOre.setType(Material.PRISMARINE,false);
+        int encodedOre=MithrylRules.encode(oldOre.getX(),oldOre.getY(),oldOre.getZ(),end.getMinHeight());
+        int[] migrationOres=Arrays.copyOf(before,before.length+1);migrationOres[before.length]=encodedOre;
+        chunk.getPersistentDataContainer().set(plugin.key("ore_locations"),PersistentDataType.INTEGER_ARRAY,migrationOres);
+        ore.load(new org.bukkit.event.world.ChunkLoadEvent(chunk,false));
+        check(oldOre.getType()==MithrylOre.ORE_BLOCK&&ore.isOre(oldOre),"previously generated ore migrates to its custom carrier");
         ItemStack[] held={new ItemStack(Material.DIAMOND_PICKAXE)};ItemStack[][] armor={new ItemStack[4]};Map<PotionEffectType,PotionEffect> effects=new HashMap<>();
         PlayerInventory inventory=proxy(PlayerInventory.class,(p,m,a)->switch(m.getName()){case "getItemInMainHand"->held[0];case "getArmorContents"->armor[0];default->null;});
         var pdc=new ItemStack(Material.STONE).getItemMeta().getPersistentDataContainer();UUID uuid=UUID.randomUUID();
@@ -113,12 +138,22 @@ public final class VerificationPlugin extends JavaPlugin {
             case "removePotionEffect"->{effects.remove(a[0]);yield null;}case "toString"->"VerificationPlayer";default->null;});
         var mine=new BlockBreakEvent(ores.getFirst(),player);ore.breakOre(mine);check(mine.isCancelled(),"diamond cannot mine");
         held[0]=items.create("pickaxe");mine=new BlockBreakEvent(ores.getFirst(),player);ore.breakOre(mine);check(!mine.isCancelled()&&!mine.isDropItems(),"mithryl can mine, no vanilla drops");ore.dropOre(mine);check(!ore.isOre(ores.getFirst()),"ore marker consumed");
-        MithrylBlocks storage=new MithrylBlocks(plugin,items);
-        Block storageBlock=end.getBlockAt(2050,102,2050);var replaced=storageBlock.getState();storageBlock.setType(Material.PRISMARINE_BRICKS,false);
+        MithrylBlocks storage=new MithrylBlocks(plugin,items,displays);
+        chunk.getPersistentDataContainer().remove(plugin.key("storage_blocks"));
+        Block storageBlock=end.getBlockAt(2050,102,2050);var replaced=storageBlock.getState();storageBlock.setType(MithrylBlocks.STORAGE_BLOCK,false);
         check(!storage.isStorage(storageBlock),"unmarked bricks not Mithryl");
         var placement=new org.bukkit.event.block.BlockPlaceEvent(storageBlock,replaced,storageBlock.getRelative(org.bukkit.block.BlockFace.DOWN),items.create("block"),player,true,EquipmentSlot.HAND);
-        Bukkit.getPluginManager().callEvent(placement);check(storage.isStorage(storageBlock),"placed custom block tracked");
-        check(new MithrylBlocks(plugin,items).isStorage(storageBlock),"storage identity in persistent chunk data");
+        Bukkit.getPluginManager().callEvent(placement);
+        Bukkit.getScheduler().runTaskLater(this,()->{try{
+        check(storage.isStorage(storageBlock),"placed custom block tracked after placement commit");
+        check(!displays.hasDisplay(storageBlock),"storage display is culled with no player in range");
+        check(new MithrylBlocks(plugin,items,displays).isStorage(storageBlock),"storage identity in persistent chunk data");
+        Block oldStorage=end.getBlockAt(2051,102,2050);oldStorage.setType(Material.PRISMARINE_BRICKS,false);
+        int encodedStorage=MithrylRules.encode(oldStorage.getX(),oldStorage.getY(),oldStorage.getZ(),end.getMinHeight());
+        int encodedPlacedStorage=MithrylRules.encode(storageBlock.getX(),storageBlock.getY(),storageBlock.getZ(),end.getMinHeight());
+        chunk.getPersistentDataContainer().set(plugin.key("storage_blocks"),PersistentDataType.INTEGER_ARRAY,new int[]{encodedPlacedStorage,encodedStorage});
+        storage.load(new org.bukkit.event.world.ChunkLoadEvent(chunk,false));
+        check(oldStorage.getType()==MithrylBlocks.STORAGE_BLOCK&&storage.isStorage(oldStorage),"previously placed storage blocks migrate to their custom carrier");
         held[0]=new ItemStack(Material.DIAMOND_PICKAXE);var storageMine=new BlockBreakEvent(storageBlock,player);Bukkit.getPluginManager().callEvent(storageMine);check(storageMine.isCancelled()&&storage.isStorage(storageBlock),"wrong tool preserves storage block");
         held[0]=items.create("pickaxe");storageMine=new BlockBreakEvent(storageBlock,player);storageMine.setCancelled(true);Bukkit.getPluginManager().callEvent(storageMine);check(storage.isStorage(storageBlock),"protected break preserves storage marker");
         var piston=new org.bukkit.event.block.BlockPistonExtendEvent(storageBlock,List.of(storageBlock),org.bukkit.block.BlockFace.UP);Bukkit.getPluginManager().callEvent(piston);check(piston.isCancelled(),"piston cannot move storage");
@@ -131,6 +166,180 @@ public final class VerificationPlugin extends JavaPlugin {
         armor[0]=new ItemStack[]{items.create("boots"),items.create("leggings"),items.create("chestplate"),items.create("helmet")};speed.update(player);check(effects.get(PotionEffectType.SPEED).getAmplifier()==1,"full set Speed II");
         speed.toggle(player,false);check(!effects.containsKey(PotionEffectType.SPEED)&&!speed.enabled(player),"toggle removes own speed and persists");
         effects.put(PotionEffectType.SPEED,new PotionEffect(PotionEffectType.SPEED,1000,2));speed.toggle(player,true);check(effects.get(PotionEffectType.SPEED).getAmplifier()==2,"strong external speed preserved");speed.toggle(player,false);check(effects.containsKey(PotionEffectType.SPEED),"toggle preserves external speed");
+        checkEndVillage(plugin,items,end,player);
         plugin.reloadConfig();
+        naturalChecks(0);
+        }catch(Throwable ex){getLogger().log(java.util.logging.Level.SEVERE,"INTEGRATION FAILED",ex);try{Files.writeString(Path.of("integration-result.txt"),"FAIL: "+ex);}catch(Exception ignored){}}},2);
+    }
+    void checkEndVillage(EndUpdatePlugin plugin,MithrylItems items,World end,Player player) throws Exception {
+        CustomBlockDisplays displays=new CustomBlockDisplays(plugin,items);
+        EndWood wood=Arrays.stream(org.bukkit.event.world.StructureGrowEvent.getHandlerList().getRegisteredListeners()).map(r->r.getListener()).filter(l->l instanceof EndWood).map(l->(EndWood)l).findFirst().orElseThrow();
+        EndVillages villages=(EndVillages)Bukkit.getPluginCommand("locatevillage").getExecutor();
+        check(villages!=null,"village command registered");
+        check("endupdate.locatevillage".equals(Bukkit.getPluginCommand("locatevillage").getPermission()),"locate permission registered");
+        List<String> messages=new ArrayList<>();
+        org.bukkit.command.CommandSender nonOp=proxy(org.bukkit.command.CommandSender.class,(p,m,a)->switch(m.getName()){case "isOp"->false;case "hasPermission"->true;case "sendMessage"->{if(a[0] instanceof String s)messages.add(s);yield null;}default->null;});
+        villages.onCommand(nonOp,Bukkit.getPluginCommand("locatevillage"),"locatevillage",new String[0]);
+        check(messages.stream().anyMatch(s->s.contains("Operatoren")),"non-OP denied even with a permission grant");
+        for(String kind:EndWood.MATERIALS.keySet())check(items.is(items.create(kind),kind),"custom wood item "+kind);
+        ItemStack[] grid=new ItemStack[9];grid[0]=items.create("end_log");Recipe recipe=Bukkit.getCraftingRecipe(grid,end);
+        check(recipe!=null&&items.is(recipe.getResult(),"end_planks")&&recipe.getResult().getAmount()==4,"End log crafts four End planks");
+        grid[0]=new ItemStack(Material.CHERRY_LOG);recipe=Bukkit.getCraftingRecipe(grid,end);
+        check(recipe==null||!items.is(recipe.getResult(),"end_planks"),"ordinary cherry log cannot create custom planks");
+        Arrays.fill(grid,null);grid[0]=grid[1]=grid[3]=grid[4]=items.create("end_log");recipe=Bukkit.getCraftingRecipe(grid,end);
+        check(recipe!=null&&items.is(recipe.getResult(),"end_wood")&&recipe.getResult().getAmount()==3,"four End logs craft three bark blocks");
+        check(villages.build(end,0,0)==null,"no villages on central island");
+        check(villages.build(Bukkit.getWorlds().getFirst(),5128,5128)==null,"no villages in overworld");
+        int cx=5128,cz=5128,ground=120;
+        checkTraderRestart(plugin,end);
+        // Reset only this disposable probe village, including its saved per-house spawn markers.
+        for(int dx=-1;dx<=1;dx++)for(int dz=-1;dz<=1;dz++){
+            Chunk c=end.getChunkAt((cx>>4)+dx,(cz>>4)+dz);
+            for(var k:Set.copyOf(c.getPersistentDataContainer().getKeys()))if(k.getKey().startsWith("trader_house_5128_5128_")||k.getKey().startsWith("station_"))c.getPersistentDataContainer().remove(k);
+            for(var entity:c.getEntities())if(entity.getPersistentDataContainer().has(plugin.key("trader_resident"))||entity.getPersistentDataContainer().has(plugin.key("trader_visual")))entity.remove();
+        }
+        // A controlled End-stone island provides reproducible terrain and obstruction tests.
+        for(int x=-18;x<=18;x++)for(int z=-18;z<=18;z++){
+            end.getBlockAt(cx+x,ground,cz+z).setType(Material.END_STONE,false);
+            for(int y=ground+1;y<=ground+15;y++)end.getBlockAt(cx+x,y,cz+z).setType(Material.AIR,false);
+        }
+        Block obstruction=end.getBlockAt(cx,ground+1,cz);obstruction.setType(Material.DIAMOND_BLOCK,false);
+        check(villages.build(end,cx,cz)==null&&obstruction.getType()==Material.DIAMOND_BLOCK,"village refuses to overwrite existing build");
+        obstruction.setType(Material.AIR,false);
+        Location center=villages.build(end,cx,cz);check(center!=null,"village fits outer End island");
+        check(villages.nearest(new Location(end,cx,ground,cz)).getBlockX()==cx,"locate reads generated village index");
+        check(end.getChunkAt(cx>>4,cz>>4).getPersistentDataContainer().has(plugin.key("end_village_center")),"village saved in chunk PDC");
+        for(int x:new int[]{-8,8})for(int z:new int[]{-8,8}){
+            int front=z<0?1:-1;Block chestBlock=end.getBlockAt(cx+x-2,ground+2,cz+z-2*front);
+            check(chestBlock.getState() instanceof org.bukkit.block.Chest,"house has a loot chest");
+            var chest=(org.bukkit.block.Chest)chestBlock.getState();
+            check(items.is(chest.getBlockInventory().getItem(11),"shard")&&items.is(chest.getBlockInventory().getItem(15),"ingot"),"house contains real Mithryl loot");
+            check(wood.id(end.getBlockAt(cx+x-3,ground+2,cz+z-3)).equals("end_log"),"house uses custom End log frame");
+        }
+        check(villages.build(end,cx,cz)==null,"existing village cannot regenerate loot");
+        check(wood.id(end.getBlockAt(cx-14,ground+1,cz)).equals("end_log"),"village has a pink End tree");
+        checkTraders(plugin,items,wood,center,player);
+        Block sapling=end.getBlockAt(cx+24,ground+1,cz);sapling.getRelative(org.bukkit.block.BlockFace.DOWN).setType(Material.END_STONE,false);
+        for(int x=-3;x<=3;x++)for(int z=-3;z<=3;z++)for(int y=0;y<8;y++)sapling.getRelative(x,y,z).setType(Material.AIR,false);
+        wood.set(sapling,"end_sapling");
+        var physics=new org.bukkit.event.block.BlockPhysicsEvent(sapling,Material.END_STONE.createBlockData());wood.physics(physics);check(physics.isCancelled(),"End sapling survives on End stone");
+        Block blocked=sapling.getRelative(0,4,0);blocked.setType(Material.DIAMOND_BLOCK,false);
+        check(!wood.grow(sapling,true,null)&&wood.id(sapling).equals("end_sapling"),"blocked growth preserves sapling and obstacle");blocked.setType(Material.AIR,false);
+        var protection=new org.bukkit.event.Listener(){};
+        Bukkit.getPluginManager().registerEvent(org.bukkit.event.world.StructureGrowEvent.class,protection,org.bukkit.event.EventPriority.HIGHEST,(l,e)->((org.bukkit.event.world.StructureGrowEvent)e).setCancelled(true),this);
+        check(!wood.grow(sapling,true,null)&&wood.id(sapling).equals("end_sapling"),"cancelled growth does not overwrite world");org.bukkit.event.HandlerList.unregisterAll(protection);
+        check(wood.grow(sapling,true,null)&&wood.id(sapling).equals("end_log"),"End sapling grows custom tree");
+        Block leaf=sapling.getRelative(2,4,0);check(wood.id(leaf).equals("end_leaves"),"tree carries custom leaves");
+        var leaves=(org.bukkit.block.data.type.Leaves)leaf.getBlockData();check(!leaves.isPersistent()&&leaves.getDistance()<7,"natural leaves connected to logs and able to decay");
+        Block ordinary=sapling.getRelative(4,0,0);ordinary.setType(Material.CHERRY_LOG,false);wood.mark(ordinary,"end_log");
+        wood.load(new org.bukkit.event.world.ChunkLoadEvent(ordinary.getChunk(),false));
+        check(ordinary.getType()==Material.CHERRY_LOG&&wood.id(ordinary).equals("end_log"),"previously placed custom End wood keeps its vanilla carrier");
+        check(!displays.hasDisplay(ordinary),"End wood display is culled with no player in range");
+        Block vanillaCherry=ordinary.getRelative(1,0,0);vanillaCherry.setType(Material.CHERRY_LOG,false);
+        check(wood.id(vanillaCherry).isEmpty()&&vanillaCherry.getType()==Material.CHERRY_LOG,"ordinary cherry remains vanilla and is never tagged as End wood");
+        check(EndWood.MATERIALS.get("end_log")==Material.CHERRY_LOG,"custom End wood uses its vanilla carrier with a separate display model");
+        check(MithrylOre.ORE_BLOCK==Material.PRISMARINE&&MithrylBlocks.STORAGE_BLOCK==Material.PRISMARINE_BRICKS,
+                "Mithryl uses its original carriers with separate display models");
+        // Export actual server blocks for a schematic-style preview, not a generated concept.
+        List<String> exported=new ArrayList<>();
+        for(int x=-18;x<=18;x++)for(int z=-18;z<=18;z++)for(int y=ground;y<=ground+10;y++){
+            Block b=end.getBlockAt(cx+x,y,cz+z);if(!b.getType().isAir())exported.add((cx+x)+","+y+","+(cz+z)+","+b.getBlockData().getAsString());
+        }
+        Files.write(Path.of("village-preview.csv"),exported);
+    }
+    void checkTraderRestart(EndUpdatePlugin plugin,World end) throws Exception {
+        Path file=Path.of("trader-restart.txt");if(!Files.exists(file))return;
+        String[] saved=Files.readString(file).split(",");UUID id=UUID.fromString(saved[0]);
+        var stand=Arrays.stream(end.getChunkAt(Integer.parseInt(saved[1]),Integer.parseInt(saved[2])).getEntities()).filter(e->e.getUniqueId().equals(id)).findFirst().orElseThrow();
+        check(stand instanceof org.bukkit.entity.ArmorStand,"trader entity survives a real server restart");
+        check(stand.getPersistentDataContainer().has(plugin.key("trader_locked")),"traded profession survives a real restart");
+        int[] used=stand.getPersistentDataContainer().get(plugin.key("trader_uses_smith"),PersistentDataType.INTEGER_ARRAY);
+        check(used!=null&&used[0]==3,"merchant stock survives a real restart");
+    }
+    void checkTraders(EndUpdatePlugin plugin,MithrylItems items,EndWood wood,Location center,Player player) throws Exception {
+        MithrylTraders traders=Arrays.stream(org.bukkit.event.player.PlayerInteractEntityEvent.getHandlerList().getRegisteredListeners()).map(r->r.getListener()).filter(l->l instanceof MithrylTraders).map(l->(MithrylTraders)l).findFirst().orElseThrow();
+        MithrylWorkstations stations=Arrays.stream(org.bukkit.event.block.BlockPlaceEvent.getHandlerList().getRegisteredListeners()).map(r->r.getListener()).filter(l->l instanceof MithrylWorkstations).map(l->(MithrylWorkstations)l).findFirst().orElseThrow();
+        List<org.bukkit.entity.ArmorStand> residents=center.getWorld().getNearbyEntities(center,15,4,15).stream().filter(traders::isTrader).map(e->(org.bukkit.entity.ArmorStand)e).toList();
+        check(residents.size()==4,"four custom village residents spawn naturally with village generation");
+        traders.populateVillage(center);check(center.getWorld().getNearbyEntities(center,15,4,15).stream().filter(traders::isTrader).count()==4,"village population is idempotent");
+        for(var resident:residents){
+            check(!resident.isVisible()&&!resident.isMarker()&&resident.isInvulnerable(),"invisible ArmorStand retains protected hitbox");
+            check(center.getWorld().getNearbyEntities(resident.getLocation(),2,3,2).stream().anyMatch(e->e instanceof org.bukkit.entity.ItemDisplay&&resident.getUniqueId().toString().equals(e.getPersistentDataContainer().get(plugin.key("trader_parent"),PersistentDataType.STRING))),"resident has namespaced ItemDisplay model");
+        }
+        check(residents.stream().map(traders::job).collect(java.util.stream.Collectors.toSet()).size()==4,"smith, gardener, relic trader and unemployed resident coexist: "+residents.stream().map(traders::job).toList());
+        for(var job:MithrylTraders.Job.values())if(job!=MithrylTraders.Job.NONE){
+            var resident=residents.stream().filter(r->traders.job(r)==job).findFirst().orElseThrow();
+            Merchant merchant=traders.merchant(resident);check(merchant.getRecipeCount()==4,"four native merchant offers for "+job);
+            check(merchant.getRecipes().stream().allMatch(r->r.getMaxUses()>0&&r.shouldIgnoreDiscounts()),"bounded stock and stable pricing");
+            var recipe=merchant.getRecipes().get(1);var cost=recipe.getIngredients();
+            check(MithrylTraders.matches(cost,cost.getFirst(),cost.size()>1?cost.get(1):null),"real ingredients accepted");
+        }
+        var fake=new ItemStack(Material.PRISMARINE_SHARD,8);var cost=List.of(items.create("ingot"));
+        check(!MithrylTraders.matches(cost,fake,null),"plain prismarine cannot buy custom trades");
+        var meta=fake.getItemMeta();meta.itemName(items.create("ingot").getItemMeta().itemName());fake.setItemMeta(meta);
+        check(!MithrylTraders.matches(cost,fake,null),"renamed imitation cannot buy custom trades");
+        var free=residents.stream().filter(r->traders.job(r)==MithrylTraders.Job.NONE).findFirst().orElseThrow();
+        Block station=free.getLocation().getBlock().getRelative(1,0,1);stations.set(station,"grove_bench");traders.refreshJob(free);
+        check(traders.job(free)==MithrylTraders.Job.GARDENER,"unemployed resident adopts player workstation");
+        check(stations.owner(station).equals(free.getUniqueId().toString()),"workplace records exclusive owner");
+        stations.set(station,"relic_altar");traders.refreshJob(free);
+        check(traders.job(free)==MithrylTraders.Job.RELIC,"untraded resident changes profession");
+        free.getPersistentDataContainer().set(plugin.key("trader_locked"),PersistentDataType.BYTE,(byte)1);
+        stations.set(station,"mithryl_forge");traders.refreshJob(free);
+        check(traders.job(free)==MithrylTraders.Job.RELIC&&stations.owner(station).isEmpty(),"traded profession does not reroll at different workstation");
+        stations.set(station,"relic_altar");traders.refreshJob(free);
+        check(stations.owner(station).equals(free.getUniqueId().toString()),"locked profession reacquires matching workstation");
+        var protectedBreak=new BlockBreakEvent(station,player);protectedBreak.setCancelled(true);Bukkit.getPluginManager().callEvent(protectedBreak);
+        check(stations.id(station).equals("relic_altar"),"cancelled station break preserves identity");
+        var piston=new org.bukkit.event.block.BlockPistonExtendEvent(station,List.of(station),org.bukkit.block.BlockFace.UP);Bukkit.getPluginManager().callEvent(piston);check(piston.isCancelled(),"workstations cannot be moved by piston");
+        Block ordinary=station.getRelative(0,0,1);ordinary.setType(Material.PURPUR_BLOCK,false);check(stations.id(ordinary).isEmpty(),"ordinary workstation carrier remains vanilla");
+        for(String id:MithrylWorkstations.MATERIALS.keySet()){
+            check(Bukkit.getRecipe(plugin.key(id))!=null,"workstation recipe registered "+id);
+            check(items.create(id).getItemMeta().getItemModel().equals(plugin.key(id)),"workstation custom item model "+id);
+        }
+        for(String id:MithrylItems.RELICS)check(items.is(items.create(id),id)&&items.create(id).getItemMeta().getItemModel().equals(plugin.key("mithryl_"+id)),"custom relic metadata "+id);
+        check(((Damageable)items.create("bloom_wand").getItemMeta()).getMaxDamage()==32,"wand has 32 charges");
+        checkRelics(plugin,items,wood,center);
+        var smith=residents.stream().filter(r->traders.job(r)==MithrylTraders.Job.SMITH).findFirst().orElseThrow();
+        Merchant merchant=traders.merchant(smith);var offer=merchant.getRecipe(0);offer.setUses(offer.getMaxUses());merchant.setRecipe(0,offer);
+        smith.getPersistentDataContainer().set(plugin.key("trader_restock_smith"),PersistentDataType.LONG,System.currentTimeMillis()-1);traders.refreshJob(smith);
+        check(traders.merchant(smith).getRecipe(0).getUses()==0,"due restock resets stock at valid workstation");
+        merchant=traders.merchant(smith);offer=merchant.getRecipe(0);offer.setUses(3);merchant.setRecipe(0,offer);
+        smith.getPersistentDataContainer().set(plugin.key("trader_locked"),PersistentDataType.BYTE,(byte)1);
+        Method save=MithrylTraders.class.getDeclaredMethod("save",org.bukkit.entity.ArmorStand.class);save.setAccessible(true);save.invoke(traders,smith);
+        check(smith.getPersistentDataContainer().get(plugin.key("trader_uses_smith"),PersistentDataType.INTEGER_ARRAY)[0]==3,"trade use counts saved to entity PDC");
+        Files.writeString(Path.of("trader-restart.txt"),smith.getUniqueId()+","+smith.getChunk().getX()+","+smith.getChunk().getZ());
+    }
+    void checkRelics(EndUpdatePlugin plugin,MithrylItems items,EndWood wood,Location center){
+        MithrylRelics relics=new MithrylRelics(plugin,items,wood);
+        var pdc=new ItemStack(Material.STONE).getItemMeta().getPersistentDataContainer();
+        Map<PotionEffectType,PotionEffect> effects=new HashMap<>();int[] food={10};float[] saturation={0};
+        Player player=proxy(Player.class,(p,m,a)->switch(m.getName()){
+            case "getPersistentDataContainer"->pdc;case "getGameMode"->GameMode.SURVIVAL;case "hasCooldown"->false;
+            case "getLocation"->center;case "getWorld"->center.getWorld();case "getFoodLevel"->food[0];case "getSaturation"->saturation[0];
+            case "setFoodLevel"->{food[0]=(int)a[0];yield null;}case "setSaturation"->{saturation[0]=(float)a[0];yield null;}
+            case "addPotionEffect"->{var effect=(PotionEffect)a[0];effects.put(effect.getType(),effect);yield true;}default->null;
+        });
+        ItemStack charm=items.create("feather_charm");
+        var use=new org.bukkit.event.player.PlayerInteractEvent(player,org.bukkit.event.block.Action.RIGHT_CLICK_AIR,charm,null,org.bukkit.block.BlockFace.SELF,EquipmentSlot.HAND);
+        use.setUseItemInHand(org.bukkit.event.Event.Result.ALLOW);relics.use(use);
+        check(effects.get(PotionEffectType.SLOW_FALLING).getDuration()==400&&charm.getAmount()==1,"charm grants twenty seconds slow falling without consumption");
+        effects.clear();use.setUseItemInHand(org.bukkit.event.Event.Result.ALLOW);relics.use(use);
+        check(effects.isEmpty()&&pdc.get(plugin.key("relic_ready_feather_charm"),PersistentDataType.LONG)>System.currentTimeMillis(),"persistent charm cooldown prevents reuse");
+        ItemStack fruit=items.create("crystal_fruit");fruit.setAmount(3);
+        use=new org.bukkit.event.player.PlayerInteractEvent(player,org.bukkit.event.block.Action.RIGHT_CLICK_AIR,fruit,null,org.bukkit.block.BlockFace.SELF,EquipmentSlot.HAND);
+        use.setUseItemInHand(org.bukkit.event.Event.Result.ALLOW);relics.use(use);
+        check(fruit.getAmount()==2&&food[0]==16&&saturation[0]>4,"crystal fruit consumes one and restores hunger/saturation");
+        check(effects.get(PotionEffectType.REGENERATION).getAmplifier()==1&&effects.get(PotionEffectType.REGENERATION).getDuration()==100,"crystal fruit grants five seconds regeneration II");
+        Block sapling=center.clone().add(35,0,0).getBlock();
+        sapling.getRelative(0,-1,0).setType(Material.END_STONE,false);
+        for(int x=-3;x<=3;x++)for(int z=-3;z<=3;z++)for(int y=0;y<8;y++)sapling.getRelative(x,y,z).setType(Material.AIR,false);
+        wood.set(sapling,"end_sapling");ItemStack wand=items.create("bloom_wand");
+        var obstruction=sapling.getRelative(0,3,0);obstruction.setType(Material.DIAMOND_BLOCK,false);
+        use=new org.bukkit.event.player.PlayerInteractEvent(player,org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK,wand,sapling,org.bukkit.block.BlockFace.UP,EquipmentSlot.HAND);
+        use.setUseInteractedBlock(org.bukkit.event.Event.Result.ALLOW);use.setUseItemInHand(org.bukkit.event.Event.Result.ALLOW);relics.use(use);
+        check(((Damageable)wand.getItemMeta()).getDamage()==0&&wood.id(sapling).equals("end_sapling"),"failed wand growth consumes no charge");
+        obstruction.setType(Material.AIR,false);use.setUseInteractedBlock(org.bukkit.event.Event.Result.ALLOW);use.setUseItemInHand(org.bukkit.event.Event.Result.ALLOW);relics.use(use);
+        check(((Damageable)wand.getItemMeta()).getDamage()==1&&wood.id(sapling).equals("end_log"),"successful wand growth consumes exactly one charge");
     }
 }

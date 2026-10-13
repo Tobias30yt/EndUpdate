@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/mangrove_button_inventory",
+  "textures": {
+    "texture": "endupdate:block/end_planks",
+    "particle": "endupdate:block/end_planks"
+  }
+}

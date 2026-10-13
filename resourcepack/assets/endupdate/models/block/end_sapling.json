@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "endupdate:block/end_sapling",
+    "particle": "endupdate:block/end_sapling"
+  }
+}
