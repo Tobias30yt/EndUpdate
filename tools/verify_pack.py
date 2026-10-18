@@ -80,7 +80,7 @@ for name,source in fixture['models'].items():
 assert json.loads((pack/'assets/endupdate/models/block/end_trapdoor.json').read_text('utf-8'))['parent']=='endupdate:block/end_trapdoor_display_bottom'
 print('11 hinged models: vanilla UVs, geometry, state item definitions and trapdoor parent verified.')
 if vanilla: vanilla.close();print('All vanilla model parents resolve in the supplied client JAR.')
-jar=root/'target/EndUpdate-1.0.3.jar'
+jar=root/'target/EndUpdate-1.0.4.jar'
 if jar.exists():
     with zipfile.ZipFile(jar) as j:
         with zipfile.ZipFile(io.BytesIO(j.read('endupdate-pack.zip'))) as z:

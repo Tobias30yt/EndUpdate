@@ -1,4 +1,7 @@
 # EndUpdate / Paper 26.3. Standardwerte funktionieren ohne Plugin-Konfiguration.
+update-checker:
+  enabled: true
+  auto-install: true
 villages:
   enabled: true
   spacing-chunks: 16

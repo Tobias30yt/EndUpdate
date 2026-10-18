@@ -1,5 +1,10 @@
 # Änderungen
 
+## 1.0.4 – 18.10.2026
+
+- EndUpdate prüft beim Start und alle 48 Stunden auf neue stabile GitHub-Releases und lädt Updates in Papers konfigurierten Plugin-Updateordner. Paper installiert die JAR beim nächsten Serverstart.
+- Automatische Downloads lassen sich mit `update-checker.auto-install: false` deaktivieren; `update-checker.enabled: false` schaltet die Prüfung aus.
+
 ## 1.0.3 – 13.10.2026
 
 - End-Falltür: Ungültigen Vanilla-Modellverweis durch eigene Modelle für unten, oben und geöffnet ersetzt.

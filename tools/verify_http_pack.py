@@ -3,7 +3,7 @@ from pathlib import Path
 import hashlib, urllib.request, urllib.error, zipfile
 
 root = Path(__file__).resolve().parents[1]
-with zipfile.ZipFile(root / 'EndUpdate-1.0.3.jar') as jar:
+with zipfile.ZipFile(root / 'EndUpdate-1.0.4.jar') as jar:
     expected = jar.read('endupdate-pack.zip')
 digest = hashlib.sha1(expected).hexdigest()
 url = f'http://127.0.0.1:25586/endupdate/{digest}.zip'

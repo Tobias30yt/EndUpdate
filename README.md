@@ -4,9 +4,11 @@ Mithryl-Erze, neue End-City-Beute und Netherite-Upgrades für **Paper 26.3 / Jav
 
 ## Installation
 
-1. `EndUpdate-1.0.3.jar` in den `plugins`-Ordner legen.
+1. `EndUpdate-1.0.4.jar` in den `plugins`-Ordner legen.
 2. Server vollständig neu starten.
 3. Das beim Beitritt angebotene Ressourcenpaket akzeptieren.
+
+Beim Start und danach alle 48 Stunden prüft EndUpdate das neueste stabile GitHub-Release. Standardmäßig lädt es eine passende JAR in Papers konfigurierten Plugin-Updateordner; Paper installiert sie beim nächsten Serverstart. Mit `update-checker.auto-install: false` bleiben automatische Downloads aus; `update-checker.enabled: false` deaktiviert die Prüfung.
 
 Das Pack ist in der JAR enthalten. Das Plugin entpackt es automatisch, startet seinen eigenen HTTP-Server und bietet es beim Beitritt an. In `server.properties` muss kein Ressourcenpaket eingetragen werden. Andere Serverpacks werden durch `addResourcePack` ergänzt.
 
@@ -155,7 +157,7 @@ JDK 25+ und Maven 3.9+:
 ./build.ps1
 ```
 
-Alternativ `mvn clean package`. Maven packt `resourcepack/` automatisch als `endupdate-pack.zip` in die JAR. Ausgabe: `target/EndUpdate-1.0.3.jar`. Für einen normalen Build ist keine Bildgenerierung und kein API-Schlüssel erforderlich. `tools/prepare_vanilla_assets.py`, `tools/prepare_endwood_assets.py` und `tools/prepare_trader_assets.py` importieren bei Bedarf die gespeicherten Bildquellen; dafür wird Python mit Pillow benötigt. `tools/render_traders.py` rendert die JSON-Modelle als Vorschau. Alle fertigen Packdateien sind bereits vorhanden.
+Alternativ `mvn clean package`. Maven packt `resourcepack/` automatisch als `endupdate-pack.zip` in die JAR. Ausgabe: `target/EndUpdate-1.0.4.jar`. Für einen normalen Build ist keine Bildgenerierung und kein API-Schlüssel erforderlich. `tools/prepare_vanilla_assets.py`, `tools/prepare_endwood_assets.py` und `tools/prepare_trader_assets.py` importieren bei Bedarf die gespeicherten Bildquellen; dafür wird Python mit Pillow benötigt. `tools/render_traders.py` rendert die JSON-Modelle als Vorschau. Alle fertigen Packdateien sind bereits vorhanden.
 
 ## Prüfung
 
@@ -174,8 +176,8 @@ Technische Referenzen: [Paper-Projektsetup](https://docs.papermc.io/paper/dev/pr
 
 ## Alle Tobias30 MidniteSMP plugins
 
-- Claims: _[Paper 1.5.6](https://github.com/Tobias30yt/Claims/releases/tag/paper-1.5.6)_
+- Claims: _[Paper 1.5.7](https://github.com/Tobias30yt/Claims/releases/tag/paper-1.5.7)_
 - Claims Client Mod: _[1.31.6](https://github.com/Tobias30yt/Claims-Client/releases/tag/v1.31.6)_
-- Reports: _[1.2.36](https://github.com/Tobias30yt/Reports/releases/tag/v1.2.36)_
-- EndUpdate: _[1.0.3](https://github.com/Tobias30yt/EndUpdate/releases/tag/v1.0.3)_
+- Reports: _[1.2.37](https://github.com/Tobias30yt/Reports/releases/tag/v1.2.37)_
+- EndUpdate: _[1.0.4](https://github.com/Tobias30yt/EndUpdate/releases/tag/v1.0.4)_
 - GrimAC: _[Modrinth](https://modrinth.com/plugin/grimac)_

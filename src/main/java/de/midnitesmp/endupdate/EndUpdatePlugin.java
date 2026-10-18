@@ -13,9 +13,10 @@ public final class EndUpdatePlugin extends JavaPlugin implements Listener, TabEx
     private MithrylItems items; private MithrylRecipes recipes; private MithrylSpeed speed; private ResourcePackHost pack;
     private MithrylGiveCommand give;
     private MithrylTraders traders;
+    private ReleaseUpdateChecker updateChecker;
     public NamespacedKey key(String name){return new NamespacedKey(this,name);}
     @Override public void onEnable(){
-        saveDefaultConfig();items=new MithrylItems(this);recipes=new MithrylRecipes(this,items);recipes.register();
+        saveDefaultConfig();updateChecker=new ReleaseUpdateChecker(this);updateChecker.start();items=new MithrylItems(this);recipes=new MithrylRecipes(this,items);recipes.register();
         speed=new MithrylSpeed(this,items);CustomBlockDisplays displays=new CustomBlockDisplays(this,items);
         MithrylOre ore=new MithrylOre(this,items,displays);MithrylBlocks storage=new MithrylBlocks(this,items,displays);pack=new ResourcePackHost(this);
         EndWood wood=new EndWood(this,items,displays);EndVillages villages=new EndVillages(this,items,wood);
@@ -39,7 +40,7 @@ public final class EndUpdatePlugin extends JavaPlugin implements Listener, TabEx
         Bukkit.getOnlinePlayers().forEach(p->{p.discoverRecipes(recipes.keys());if(pack.ready())pack.offer(p);});
         getLogger().info("EndUpdate enabled: 9 Mithryl upgrades, End City loot, surface ore and resource pack.");
     }
-    @Override public void onDisable(){if(traders!=null)traders.shutdown();if(speed!=null)Bukkit.getOnlinePlayers().forEach(speed::clear);if(pack!=null)pack.close();if(recipes!=null)recipes.unregister();}
+    @Override public void onDisable(){if(updateChecker!=null)updateChecker.shutdown();if(traders!=null)traders.shutdown();if(speed!=null)Bukkit.getOnlinePlayers().forEach(speed::clear);if(pack!=null)pack.close();if(recipes!=null)recipes.unregister();}
     @EventHandler public void join(PlayerJoinEvent e){e.getPlayer().discoverRecipes(recipes.keys());}
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
